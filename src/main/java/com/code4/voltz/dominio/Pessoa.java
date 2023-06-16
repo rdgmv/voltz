@@ -27,5 +27,13 @@ public class Pessoa {
 	private String parentescoComUsuario;
 
 	private LocalDate dataEntrada = LocalDate.now();
+	
+	
+	
+	public boolean identificaPor(String nome, String dataNascimento) {
+		return this.nome.equals(nome) &&
+				this.dataNascimento.equals(dataNascimento) ;
+		
+	}
 
 }
