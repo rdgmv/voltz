@@ -94,33 +94,33 @@ public class PessoaController {
 
 	}
 
-//	@PutMapping
-//	public ResponseEntity<?> atualizarPessoa(@RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm){
-//		Map<Path, String> violacoesMap = validar(pessoaAtualizacaoForm);
-//
-//		if (!violacoesMap.isEmpty()) {
-//			return ResponseEntity.badRequest().body(violacoesMap);
-//		} else {
-//
-//			Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
-//
-//			Optional<Pessoa> opPessoa = repo.buscar
-//					(pessoa.getNome(), pessoa.getDataNascimento());
-//
-//			if (opPessoa.isEmpty()){
-//				return ResponseEntity.badRequest().body("Pessoa não encontrada");
-//			} else {
-//
-//			Optional<Pessoa> opPessoa = repo.atualizar();
-//			if (opPessoa.isEmpty()){
-//				return ResponseEntity.badRequest().body("Pessoa não encontrada");
-//			else
-//			return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
-//			}
-//		}
-//	}
+	@PutMapping
+	public ResponseEntity<?> atualizarPessoa(@RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm) {
+		Map<Path, String> violacoesMap = validar(pessoaAtualizacaoForm);
 
-	private   <T> Map<Path, String> validar(T dto) {
+		if (!violacoesMap.isEmpty()) {
+			return ResponseEntity.badRequest().body(violacoesMap);
+		} else {
+
+			Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
+
+			Optional<Pessoa> opPessoa = repo.buscar
+					(pessoa.getNome(), pessoa.getDataNascimento());
+
+			if (opPessoa.isEmpty()) {
+				return ResponseEntity.badRequest().body("Pessoa não encontrada");
+			} else {
+
+				repo.atualizar(pessoa);
+				if (opPessoa.isEmpty()) {
+					return ResponseEntity.badRequest().body("Pessoa não encontrada");
+				} else {
+					return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
+				}
+			}
+		}
+	}
+	private <T> Map<Path, String> validar(T dto) {
 		Set<ConstraintViolation<T>> violacoes = validator.validate(dto);
 		Map<Path, String> violacoesMap = violacoes.stream()
 				.collect(Collectors.toMap(violacao -> violacao.getPropertyPath(), violacao -> violacao.getMessage()));
@@ -128,3 +128,4 @@ public class PessoaController {
 	}
 
 }
+
