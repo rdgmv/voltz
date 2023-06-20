@@ -10,13 +10,12 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 
 
-public class PessoaForm {
+public class PessoaCadastroEAtualizacaoForm {
 	
 	@JsonProperty
 	@NotBlank(message = "Não deve ser Branco ou Nulo")
 	private String nome;
 	@JsonProperty
-
 	@Past
 	@NotNull(message = "Não deve ser Branco ou Nulo")
 	private LocalDate dataNascimento;

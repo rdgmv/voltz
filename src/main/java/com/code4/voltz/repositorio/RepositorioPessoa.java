@@ -1,5 +1,7 @@
 package com.code4.voltz.repositorio;
 
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -21,22 +23,30 @@ public class RepositorioPessoa {
 		pessoas.add(pessoa);
 	}
 
-	public Optional<Pessoa> buscar(String nome, String dataNascimento) {
-		return pessoas.stream().filter(pessoa -> pessoa.identificaPor(nome, dataNascimento)).findFirst();
+	public Optional<Pessoa> buscar(String nome, LocalDate dataNascimento) {
+		return pessoas.stream().filter(
+				pessoa -> pessoa.identificadoPor(nome, dataNascimento)).findFirst();
 	}
-	
-	
-	public void deletar(Pessoa pessoa) {
+	public Collection<Pessoa> findAll() {
+		return pessoas;
+	}
+	public void excluir(Pessoa pessoa) {
 		pessoas.remove(pessoa);
 	}
 	
 	
-	public void atualizaPessoa(Pessoa novaPessoa) {
-		for (Pessoa pessoa : pessoas ) {
-			if (pessoa.getNome().equals(novaPessoa)) {
-				pessoa.setDataNascimento(novaPessoa.getDataNascimento());
-			}
+	public Optional<Pessoa> atualizar(Pessoa novaPessoa) {
+		Optional<Pessoa> pessoaASerBuscada = this.buscar(novaPessoa.getNome(), novaPessoa.getDataNascimento());
+
+		if(pessoaASerBuscada.isPresent()) {
+			Pessoa pessoa = pessoaASerBuscada.get();
+			pessoa.setSexo(novaPessoa.getSexo());
+			pessoa.setParentescoComUsuario(novaPessoa.getParentescoComUsuario());
+
+			return Optional.of(pessoa);
 		}
+
+		return Optional.empty();
 	}
 	
 	
