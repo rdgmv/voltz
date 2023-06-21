@@ -25,7 +25,7 @@ import jakarta.validation.Validator;
 public class PessoaController {
 
 	@Autowired
-	private Validator validator ;
+	private Validator validator;
 
 	@Autowired
 	private RepositorioPessoa repo;
@@ -47,7 +47,7 @@ public class PessoaController {
 	}
 
 	@GetMapping
-	public ResponseEntity<?> consultarPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaConsultaForm){
+	public ResponseEntity<?> consultarPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaConsultaForm) {
 		Map<Path, String> violacoesMap = validar(pessoaConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -57,7 +57,7 @@ public class PessoaController {
 
 			Optional<Pessoa> opPessoa = repo.buscar(pessoa.getNome(), pessoa.getDataNascimento());
 
-			if (opPessoa.isEmpty()){
+			if (opPessoa.isEmpty()) {
 				return ResponseEntity.badRequest().body("Pessoa não encontrada");
 			} else {
 				return ResponseEntity.ok(opPessoa.get());
@@ -66,14 +66,14 @@ public class PessoaController {
 
 	}
 
-	@GetMapping(value = {"/"})
+	@GetMapping(value = { "/" })
 	public ResponseEntity<Collection<Pessoa>> findAll() {
 		var pessoas = repo.findAll();
 		return ResponseEntity.ok(pessoas);
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> excluirPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaExclusaoForm){
+	public ResponseEntity<?> excluirPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaExclusaoForm) {
 		Map<Path, String> violacoesMap = validar(pessoaExclusaoForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -81,10 +81,9 @@ public class PessoaController {
 		} else {
 			Pessoa pessoa = pessoaExclusaoForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.buscar
-					(pessoa.getNome(), pessoa.getDataNascimento());
+			Optional<Pessoa> opPessoa = repo.buscar(pessoa.getNome(), pessoa.getDataNascimento());
 
-			if (opPessoa.isEmpty()){
+			if (opPessoa.isEmpty()) {
 				return ResponseEntity.badRequest().body("Pessoa não encontrada");
 			} else {
 				repo.excluir(pessoa);
@@ -104,22 +103,16 @@ public class PessoaController {
 
 			Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.buscar
-					(pessoa.getNome(), pessoa.getDataNascimento());
-
+			Optional<Pessoa> opPessoa = repo.atualizar(pessoa);
+			
 			if (opPessoa.isEmpty()) {
 				return ResponseEntity.badRequest().body("Pessoa não encontrada");
 			} else {
-
-				repo.atualizar(pessoa);
-				if (opPessoa.isEmpty()) {
-					return ResponseEntity.badRequest().body("Pessoa não encontrada");
-				} else {
-					return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
-				}
+				return ResponseEntity.ok(opPessoa.get());
 			}
 		}
 	}
+
 	private <T> Map<Path, String> validar(T dto) {
 		Set<ConstraintViolation<T>> violacoes = validator.validate(dto);
 		Map<Path, String> violacoesMap = violacoes.stream()
@@ -128,4 +121,3 @@ public class PessoaController {
 	}
 
 }
-
