@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter
-@EqualsAndHashCode(of= {"rua","numero"})
+@EqualsAndHashCode(of = { "rua", "numero" })
 @RequiredArgsConstructor
 public class Endereco {
 
@@ -28,13 +28,12 @@ public class Endereco {
 	@Setter
 	@NonNull
 	private String estado;
-	
+
 	private LocalDate dataEntrada = LocalDate.now();
-	
-	public boolean identificadoPor(String rua, String  numero) {
-		return this.rua.equals(rua) &&
-				this.numero.equals(numero) ;
-		
+
+	public boolean identificadoPor(String rua, String numero) {
+		return this.rua.equals(rua) && this.numero.equals(numero);
+
 	}
 
 	public Endereco(@NonNull String rua, @NonNull String numero) {
@@ -42,10 +41,5 @@ public class Endereco {
 		this.rua = rua;
 		this.numero = numero;
 	}
-	
-	
-	
-	
-	
-	
+
 }
