@@ -13,13 +13,13 @@ public class EletrodomesticoCadastroEAtualizacaoForm {
 
 	
 	
-	@NotNull(message = "Campo nome não pode estar vazio.")
+	@NotNull(message = "Campo nome não pode ser branco ou nulo.")
 	@JsonProperty
 	private String nome;
-	@NotNull(message = "Campo modelo não pode estar vazio.")
+	@NotNull(message = "Campo modelo não pode ser branco ou nulo.")
 	@JsonProperty
 	private String modelo;
-	@NotNull(message = "Campo potencia não pode estar vazio.")
+	@NotNull(message = "Campo potência não pode ser branco ou nulo.")
 	@JsonProperty
 	private String potencia;
 	

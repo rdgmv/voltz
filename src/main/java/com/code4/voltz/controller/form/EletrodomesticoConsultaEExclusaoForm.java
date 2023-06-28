@@ -11,10 +11,10 @@ import java.time.LocalDate;
 
 public class EletrodomesticoConsultaEExclusaoForm {
     @JsonProperty
-    @NotBlank(message = "Não deve ser Branco ou Nulo")
+    @NotBlank(message = "Campo nome não pode ser branco ou nulo.")
     private String nome;
     @JsonProperty
-    @NotNull(message = "Não deve ser Branco ou Nulo")
+    @NotNull(message = "Campo modelo não pode ser branco ou nulo.")
     private String modelo;
 
     public Eletrodomestico toEletrodomestico() {

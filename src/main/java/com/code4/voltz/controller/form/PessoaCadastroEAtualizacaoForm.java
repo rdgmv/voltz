@@ -13,17 +13,17 @@ import jakarta.validation.constraints.Past;
 public class PessoaCadastroEAtualizacaoForm {
 	
 	@JsonProperty
-	@NotBlank(message = "Não deve ser Branco ou Nulo")
+	@NotBlank(message = "Campo nome não pode ser branco ou nulo.")
 	private String nome;
 	@JsonProperty
 	@Past
-	@NotNull(message = "Não deve ser Branco ou Nulo")
+	@NotNull(message = "Campo data de nascimento não pode ser branco ou nulo.")
 	private LocalDate dataNascimento;
 	@JsonProperty
-	@NotBlank(message = "Não deve ser Branco ou Nulo")
+	@NotBlank(message = "Campo sexo não pode ser branco ou nulo.")
 	private String sexo;
 	@JsonProperty
-	@NotBlank(message = "Não deve ser Branco ou Nulo")
+	@NotBlank(message = "Campo parentesco com o usuário não pode ser branco ou nulo.")
 	private String parentescoComUsuario;
 	
 	public  Pessoa toPessoa() {

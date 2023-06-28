@@ -7,19 +7,19 @@ import jakarta.validation.constraints.NotNull;
 
 public class EnderecoCadastroEAtualizacaoForm {
 
-	@NotNull(message = "Campo rua não pode estar vazio.")
+	@NotNull(message = "Campo rua não pode ser branco ou nulo.")
 	@JsonProperty
 	private String rua;
-	@NotNull(message = "Campo numero não pode estar vazio.")
+	@NotNull(message = "Campo número não pode ser branco ou nulo.")
 	@JsonProperty
 	private String numero;
-	@NotNull(message = "Campo bairro não pode estar vazio.")
+	@NotNull(message = "Campo bairro não pode ser branco ou nulo.")
 	@JsonProperty
 	private String bairro;
-	@NotNull(message = "Campo cidade não pode estar vazio.")
+	@NotNull(message = "Campo cidade não pode ser branco ou nulo.")
 	@JsonProperty
 	private String cidade;
-	@NotNull(message = "Campo estado não pode estar vazio.")
+	@NotNull(message = "Campo estado não pode ser branco ou nulo.")
 	@JsonProperty
 	private String estado;
 	

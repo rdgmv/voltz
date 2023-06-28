@@ -12,10 +12,10 @@ import java.time.LocalDate;
 public class EnderecoConsultaEExclusaoForm {
 	
 	@JsonProperty
-	@NotNull(message = "Campo rua não pode estar vazio.")
+	@NotNull(message = "Campo rua não pode ser branco ou nulo.")
 	private String rua;
 
-	@NotNull(message = "Campo numero não pode estar vazio.")
+	@NotNull(message = "Campo número não pode ser branco ou nulo.")
 	@JsonProperty
 	private String numero;
 

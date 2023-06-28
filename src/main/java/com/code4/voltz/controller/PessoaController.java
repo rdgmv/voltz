@@ -84,10 +84,10 @@ public class PessoaController {
 			Optional<Pessoa> opPessoa = repo.buscar(pessoa.getNome(), pessoa.getDataNascimento());
 
 			if (opPessoa.isEmpty()) {
-				return ResponseEntity.badRequest().body("Pessoa não encontrada");
+				return ResponseEntity.badRequest().body("Pessoa não encontrada.");
 			} else {
 				repo.excluir(pessoa);
-				return ResponseEntity.ok("Pessoa excluída com sucesso");
+				return ResponseEntity.ok("Pessoa excluída com sucesso.");
 			}
 		}
 
@@ -106,7 +106,7 @@ public class PessoaController {
 			Optional<Pessoa> opPessoa = repo.atualizar(pessoa);
 			
 			if (opPessoa.isEmpty()) {
-				return ResponseEntity.badRequest().body("Pessoa não encontrada");
+				return ResponseEntity.badRequest().body("Pessoa não encontrada.");
 			} else {
 				return ResponseEntity.ok(opPessoa.get());
 			}

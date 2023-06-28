@@ -65,7 +65,7 @@ public class EnderecoController {
 			Optional<Endereco> opEndereco = repo.buscar(endereco.getRua(), endereco.getNumero());
 
 			if (opEndereco.isEmpty()) {
-				return ResponseEntity.badRequest().body("Endereço não encontrado");
+				return ResponseEntity.badRequest().body("Endereço não encontrado.");
 			} else {
 				return ResponseEntity.ok(opEndereco.get());
 			}
@@ -92,10 +92,10 @@ public class EnderecoController {
 			Optional<Endereco> opEndereco = repo.buscar(endereco.getRua(), endereco.getNumero());
 
 			if (opEndereco.isEmpty()) {
-				return ResponseEntity.badRequest().body("Endereço não encontrado");
+				return ResponseEntity.badRequest().body("Endereço não encontrado.");
 			} else {
 				repo.excluir(endereco);
-				return ResponseEntity.ok("Endereço excluído com sucesso");
+				return ResponseEntity.ok("Endereço excluído com sucesso.");
 			}
 		}
 
@@ -114,7 +114,7 @@ public class EnderecoController {
 			Optional<Endereco> opEndereco = repo.atualizar(endereco);
 			
 			if (opEndereco.isEmpty()) {
-				return ResponseEntity.badRequest().body("Endereço não encontrado");
+				return ResponseEntity.badRequest().body("Endereço não encontrado.");
 			} else {
 				return ResponseEntity.ok(opEndereco.get());
 			}
