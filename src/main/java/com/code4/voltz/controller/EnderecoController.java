@@ -1,7 +1,6 @@
 package com.code4.voltz.controller;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -20,9 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.code4.voltz.controller.form.EnderecoCadastroEAtualizacaoForm;
 import com.code4.voltz.controller.form.EnderecoConsultaEExclusaoForm;
-import com.code4.voltz.controller.form.EnderecoCadastroEAtualizacaoForm;
-import com.code4.voltz.controller.form.EnderecoConsultaEExclusaoForm;
-import com.code4.voltz.dominio.Endereco;
 import com.code4.voltz.dominio.Endereco;
 import com.code4.voltz.repositorio.RepositorioEndereco;
 
@@ -69,7 +65,7 @@ public class EnderecoController {
 			Optional<Endereco> opEndereco = repo.buscar(endereco.getRua(), endereco.getNumero());
 
 			if (opEndereco.isEmpty()) {
-				return ResponseEntity.badRequest().body("Endereço não encontrada");
+				return ResponseEntity.badRequest().body("Endereço não encontrado");
 			} else {
 				return ResponseEntity.ok(opEndereco.get());
 			}
