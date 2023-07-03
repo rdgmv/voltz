@@ -230,7 +230,7 @@ ___
 ## 👨‍🎓 Projeto desenvolvido por:
 
 [Jeferson Alves ](https://github.com/jefsantos)•
-[Rodrigo Maciel ](https://github.com/rodrigomgalvao)•
 [Rodrigo Cotrim ](https://github.com/rdgmv)•
+[Rodrigo Maciel ](https://github.com/rodrigomgalvao)•
 [William Sousa ](https://github.com/willrsousa94)
 
