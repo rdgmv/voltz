@@ -88,7 +88,7 @@ localhost:8080/enderecos.
 ```
 
 <p align="justify">
-   Além disso, o sistem atribui automaticamente uma data de entrada para cada cadastro
+   Além disso, o sistema atribui automaticamente uma data de entrada para cada cadastro
    e valida os campos para que não haja inserção de dados inválidos, tal
    como brancos ou nulos, em todos os serviços.
 <p>
