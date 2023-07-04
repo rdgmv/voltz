@@ -216,6 +216,7 @@ ___
 <p align="justify">
    
    **Implementação dos DTO**
+   
    Inicialmente, foi pensada a utilização do JMapper para a transformação das entradas recebidas 
    pelas requisições em objetos que fizessem a representação das classes Pessoa, Endereço e 
    Eletrodoméstico. A utilização foi frustrada por erros apresentados no start da aplicação, 
@@ -230,6 +231,7 @@ ___
       implementado nas três classes de domínio. 
   
    **Validação de Beans x Classes DTO, conforme tipo de requisição**
+   
    Após a implementação das classes DTO no método POST, cujos dados de entrada são completos para a 
    criação de uma Pessoa, Endereço ou Eletrodoméstico, observou-se que ao aplicar validação de beans 
    para garantir o recebimento de todas as informações necessárias, a classe DTO não mais serviria 
