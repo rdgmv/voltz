@@ -224,9 +224,11 @@ ___
    Após pesquisas e análise, optou-se pela utilização de builders nas classes DTO, com métodos 
    toPessoa(), toEndereco() e toEletrodomestico().
    Com a implementação, foi possível:
+   
    •	Garantir aderência ao SRP – Single Responsability Principle, deixando a cargo das classes 
       DTO a responsabilidade pelo contato inicial com a requisição e pela aplicação da validação 
       de beans e para as classes de domínio a aplicação de regras inerentes ao negócio; e
+      
    •	Mitigar fragilidade de segurança, tornando restrito o acesso a alterações do atributo dataEntrada, 
       implementado nas três classes de domínio. 
   
