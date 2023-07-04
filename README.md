@@ -5,16 +5,16 @@
 
 # Relatório Técnico:
 
-**Sistema de Cadastro de Pessoa, Eletrodoméstico e Endereços.**
+**Sistema de Cadastro de Pessoa, Eletrodoméstico e Endereço.**
 ___
 
 ## 🗒 Introdução
 
 <p align="justify">
 O presente relatório técnico descreve o sistema Voltz, nesta primeira fase, preparamos os
-serviços de ; cadastro de pessoa, eletrodoméstico e endereços, desenvolvido utilizando a
+serviços de : cadastro de pessoa, eletrodoméstico e endereço, desenvolvido utilizando a
 arquitetura de microserviços com Spring Boot. O objetivo do sistema é fornecer uma solução
-robusta e escalável para o gerenciamento de informações de usuários, seus eletrodomésticos
+robusta e escalável para o gerenciamento de informações de pessoas, seus eletrodomésticos
 e endereços associados. O sistema foi implementado utilizando tecnologias modernas como
 Java 17, Lombok, Bean Validation, DevTools e Maven.
 </p>
@@ -27,7 +27,7 @@ A arquitetura de microserviços é uma abordagem de desenvolvimento de software 
 uma aplicação em um conjunto de serviços independentes, cada um responsável por uma
 funcionalidade específica. Nesse sistema, foram identificados três microserviços principais:
 pessoa, eletrodoméstico e endereço. Cada microserviço possui sua própria base de código,
-banco de dados e API para interação com as demais partes do sistema.
+persistência de dados e API para interação com as demais partes do sistema.
 </p>
 
 ___
@@ -54,8 +54,8 @@ ___
 
 <p align="justify">
    O microserviço de Pessoa permite o cadastro, consulta, atualização e exclusão de informações
-   relacionadas aos usuários. As informações básicas do usuário incluem nome, data de
-   nascimento, sexo e Grau parentesco. cadastrados através do method POST na URL:
+   relacionadas às pessoas. As informações básicas da pessoa incluem nome, data de
+   nascimento, sexo e grau parentesco, cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -67,8 +67,8 @@ localhost:8080/pessoas
 
 <p align="justify">
    O microserviço de eletrodoméstico é responsável pelo gerenciamento das informações
-   relacionadas aos eletrodomésticos. Cada eletrodoméstico possui um nome, modelo, potência
-   e data de entrada, cadastrados através do method POST na URL:
+   relacionadas aos eletrodomésticos. Cada eletrodoméstico possui um nome, modelo e potência,
+   cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -79,8 +79,8 @@ localhost:8080/eletrodomesticos
 
 <p align="justify">
    O microserviço de endereço permite o cadastro e gerenciamento das informações de
-   endereços. Cada endereço possui campos como rua, número, bairro, cidade, estado e data de
-   entrada, cadastrados através do method POST na URL:
+   endereços. Cada endereço possui campos como rua, número, bairro, cidade e estado,
+   cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -88,8 +88,9 @@ localhost:8080/enderecos.
 ```
 
 <p align="justify">
-   Além disso, estamos validando os campos para que não haja inserção de dados inválidos, tal
-   como brancos ou nulos, em todos os serviços de cadastro.
+   Além disso, o sistem atribui automaticamente uma data de entrada para cada cadastro
+   e valida os campos para que não haja inserção de dados inválidos, tal
+   como brancos ou nulos, em todos os serviços.
 <p>
 
 ___
@@ -156,7 +157,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>6. Realizando a exclusão de uma pessoa que não esta cadastrada em Sistema através do DELETE.</summary>
+<summary>6. Realizando a exclusão de uma pessoa que não está cadastrada em Sistema através do DELETE.</summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
@@ -164,7 +165,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>7. Realizando a exclusão de uma pessoa que esta cadastrada em Sistema através do DELETE, porém com o campo “nome” null.</summary>
+<summary>7. Realizando a exclusão de uma pessoa que está cadastrada em Sistema através do DELETE, porém com o campo “nome” null.</summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
