@@ -211,7 +211,7 @@ ___
 
 ___
 
-## ? Desafio Encontrados
+## 🍄 Desafio Encontrados
 
 <p align="justify">
    
@@ -242,6 +242,7 @@ ___
    garantiu-se a validação dos dados necessários a cada requisição, mantendo-se, para todas as requisições, 
    a aplicação do SRP. 
 </p>
+
 ___
 
 ## 🏁 Considerações Finais
