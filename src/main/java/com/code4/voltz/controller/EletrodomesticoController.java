@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.code4.voltz.dominio.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,12 @@ public class EletrodomesticoController {
 
 			Eletrodomestico eletrodomestico = eletrodomesticoCadastroForm.toEletrodomestico();
 
-			repo.salvar(eletrodomestico);
+			Optional<Eletrodomestico> opEletrodomestico = repo.salvar(eletrodomestico);
 
+			if (opEletrodomestico.isEmpty()){
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).
+						body("Duplicidade: eletrodoméstico já cadastrado no sistema.");
+			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(eletrodomestico);
 		}
 

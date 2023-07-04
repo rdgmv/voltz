@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.code4.voltz.dominio.Eletrodomestico;
 import org.springframework.stereotype.Repository;
 
 import com.code4.voltz.dominio.Endereco;
@@ -18,10 +19,15 @@ public class RepositorioEndereco {
 		enderecos = new HashSet<>();
 	}
 
-	public void salvar(Endereco endereco) {
-		enderecos.add(endereco);
-	}
+	public Optional<Endereco> salvar(Endereco endereco) {
+		Optional<Endereco> enderecoASerCadastrado = this.buscar(endereco.getRua(), endereco.getNumero());
 
+		if(enderecoASerCadastrado.isEmpty()) {
+			enderecos.add(endereco);
+			return Optional.of(endereco);
+		}
+		return Optional.empty();
+	}
 	public Optional<Endereco> buscar(String rua, String numero) {
 		return enderecos.stream().filter(endereco -> endereco.identificadoPor(rua, numero)).findFirst();
 	}

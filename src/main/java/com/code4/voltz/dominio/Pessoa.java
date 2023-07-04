@@ -18,7 +18,7 @@ public class Pessoa {
 	private LocalDate dataNascimento;
 	@Setter
 	@NonNull
-	private String sexo;
+	private Sexo sexo;
 	@Setter
 	@NonNull
 	private String parentescoComUsuario;

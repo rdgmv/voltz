@@ -3,11 +3,10 @@ package com.code4.voltz.controller.form;
 import java.time.LocalDate;
 
 import com.code4.voltz.dominio.Pessoa;
+import com.code4.voltz.dominio.Sexo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.*;
 
 
 public class PessoaCadastroEAtualizacaoForm {
@@ -20,15 +19,18 @@ public class PessoaCadastroEAtualizacaoForm {
 	@NotNull(message = "Campo data de nascimento não pode ser branco ou nulo.")
 	private LocalDate dataNascimento;
 	@JsonProperty
-	@NotBlank(message = "Campo sexo não pode ser branco ou nulo.")
-	private String sexo;
+	@Min(value = 0, message = "Campo sexo deve ser 0 para masculino e 1 para feminino.")
+	@Max(value = 1, message = "Campo sexo deve ser 0 para masculino e 1 para feminino.")
+	@NotNull(message = "Campo sexo não pode ser nulo.")
+	private int sexo;
 	@JsonProperty
 	@NotBlank(message = "Campo parentesco com o usuário não pode ser branco ou nulo.")
 	private String parentescoComUsuario;
-	
+
+
+
 	public  Pessoa toPessoa() {
-		
-		return new Pessoa(nome, dataNascimento, sexo, parentescoComUsuario);
+		return new Pessoa(nome, dataNascimento, Sexo.values()[sexo], parentescoComUsuario);
 	}
 
 }

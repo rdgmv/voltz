@@ -40,8 +40,12 @@ public class PessoaController {
 
 			Pessoa pessoa = pessoaCadastroForm.toPessoa();
 
-			repo.salvar(pessoa);
+			Optional<Pessoa> opPessoa = repo.salvar(pessoa);
 
+			if (opPessoa.isEmpty()){
+				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).
+						body("Duplicidade: pessoa já cadastrada no sistema.");
+			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
 		}
 	}

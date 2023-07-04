@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.code4.voltz.dominio.Pessoa;
 import org.springframework.stereotype.Repository;
 
 import com.code4.voltz.dominio.Eletrodomestico;
@@ -19,8 +20,14 @@ public class RepositorioEletrodomestico {
 		eletrodomesticos = new HashSet<>();
 	}
 
-	public void salvar(Eletrodomestico eletrodomestico) {
-		eletrodomesticos.add(eletrodomestico);
+	public Optional<Eletrodomestico> salvar(Eletrodomestico eletrodomestico) {
+		Optional<Eletrodomestico> eletroASerCadastrado = this.buscar(eletrodomestico.getNome(), eletrodomestico.getModelo());
+
+		if(eletroASerCadastrado.isEmpty()) {
+			eletrodomesticos.add(eletrodomestico);
+			return Optional.of(eletrodomestico);
+		}
+		return Optional.empty();
 	}
 
 	public Optional<Eletrodomestico> buscar(String nome, String modelo) {

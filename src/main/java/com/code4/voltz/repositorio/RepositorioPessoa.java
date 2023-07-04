@@ -19,8 +19,14 @@ public class RepositorioPessoa {
 		pessoas = new HashSet<>();
 	}
 
-	public void salvar(Pessoa pessoa) {
-		pessoas.add(pessoa);
+	public Optional<Pessoa> salvar(Pessoa pessoa) {
+		Optional<Pessoa> pessoaASerCadastrada = this.buscar(pessoa.getNome(), pessoa.getDataNascimento());
+
+		if(pessoaASerCadastrada.isEmpty()) {
+			pessoas.add(pessoa);
+			return Optional.of(pessoa);
+		}
+		return Optional.empty();
 	}
 
 	public Optional<Pessoa> buscar(String nome, LocalDate dataNascimento) {
