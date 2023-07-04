@@ -104,8 +104,13 @@ A Request abaixo responsável pelo cadastro de pessoa, tem como obrigatoriedade 
 > Campos: “nome”, “dataNascimento”, “sexo”, “parentescoComUsuário”
 
 <p align="justify">
-Caso a requisição seja realizada com um dos campos NULO ou BRANCO, o sistema retorna crítica, impossibilitando que a requisição seja concluida. 
-Como consequencia, temos o Response nos retornando o status **400 – Bad Request.**
+Caso a requisição seja realizada com um dos campos NULO ou BRANCO, o sistema retorna crítica, impossibilitando que a requisição seja concluida. Como consequencia, temos o Response nos retornando o status **400 – Bad Request.** 
+
+Caso na requisição de POST seja identificada a duplicidade de registro, temos o Response nos retornando
+o status **422 – Unprocessable Entity.**
+
+Caso na requisiçao de GET não seja encontrado o registro, temos o Response nos retornando
+o status **404 – Not found.**
 </p>
 
 <p align="justify">
