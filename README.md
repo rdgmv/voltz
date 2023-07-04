@@ -105,7 +105,7 @@ A Request abaixo responsável pelo cadastro de pessoa, tem como obrigatoriedade 
 
 <p align="justify">
 
-Caso a requisição seja realizada com um dos campos NULO ou BRANCO, o sistema retorna crítica, impossibilitando que a requisição seja concluída. Como consequência, temos o Response nos retornando o status **400 - Bad request.**
+Caso a requisição seja realizada com um dos campos NULO ou BRANCO, o sistema retorna crítica, impossibilitando que a requisição seja concluída. Como consequência, temos o Response nos retornando o status **400 – Bad request.**
 
 Caso na requisição de POST seja identificada a duplicidade de registro, temos o Response nos retornando
 o status **422 – Unprocessable Entity.**
