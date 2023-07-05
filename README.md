@@ -83,7 +83,7 @@ localhost:8080/eletrodomesticos
 </p>
 
 ```
-localhost:8080/enderecos.
+localhost:8080/enderecos
 ```
 
 <p align="justify">
