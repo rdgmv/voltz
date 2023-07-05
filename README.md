@@ -1,7 +1,6 @@
 # voltz
 
-### 📖 Projeto
-
+___
 
 # Relatório Técnico:
 
@@ -55,7 +54,7 @@ ___
 <p align="justify">
    O microserviço de Pessoa permite o cadastro, consulta, atualização e exclusão de informações
    relacionadas às pessoas. As informações básicas da pessoa incluem nome, data de
-   nascimento, sexo e grau parentesco, cadastrados através do method POST na URL:
+   nascimento, sexo e grau de parentesco, cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -101,17 +100,17 @@ ___
 A Request abaixo responsável pelo cadastro de pessoa, tem como obrigatoriedade o preenchimento dos campos a serem preenchidos.
 </p>
 
-> Campos: “nome”, “dataNascimento”, “sexo”, “parentescoComUsuário”
+> Campos: “nome”, “dataNascimento”, “sexo”, “parentescoComUsuario”
 
 <p align="justify">
 
 Caso a requisição seja realizada com um dos campos **NULO** ou **BRANCO**, o sistema retorna crítica, impossibilitando que a requisição seja concluída. Como consequência, temos o Response nos retornando o status **400 – Bad request.**
 
-Quanto aos dados já inseridos no sistema, ou seja, dados validos, realizamos a validação onde aponta se há ou não duplicidade, caso a duplicidade for existente, temos o Response nos retornando o status **422 – Unprocessable Entity.**
+Quanto aos dados já inseridos no sistema, ou seja, dados válidos, realizamos a validação onde aponta se há ou não duplicidade, caso a duplicidade for existente, temos o Response nos retornando o status **422 – Unprocessable Entity.**
 
-Quanto a dados inexistentes, uma vez solicitado na requisição, o Sistema realiza a validação e caso as informações enviadas não sejam encontradas, temos o Response nos retornando o status **404 – Not Found.**
+Quanto aos dados inexistentes, uma vez solicitado na requisição, o Sistema realiza a validação e caso as informações enviadas não sejam encontradas, temos o Response nos retornando o status **404 – Not Found.**
 
-Quanto a requisições validas, onde o preenchimento dos campos obrigatórios são preenchidos de forma correta, temos o Response nos retornando o status **200 – OK.** Para requisições do tipo POST temos o retorno **201 - CREATED.** 
+Quanto a requisições válidas, onde o preenchimento dos campos obrigatórios são preenchidos de forma correta, temos o Response nos retornando o status **200 – OK.** Para requisições do tipo POST temos o retorno **201 - CREATED.** 
 
 </p>
 
@@ -142,7 +141,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>3. Ao tentar realizar o cadastro de uma pessoa já cadastrada no Sistema através do **POST**, é apresentada uma critica de duplicidade de registros. Essa por sua vez, impede que a ação seja executada.</summary>
+<summary>3. Ao tentar realizar o cadastro de uma pessoa já cadastrada no Sistema através do **POST**, é apresentada uma crítica de duplicidade de registros. Essa por sua vez, impede que a ação seja executada.</summary>
 
 > Retorno esperado: 422 - **Unprocessable Entity**
 
@@ -174,7 +173,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>7. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema explode critica para o usuário, sinalizando o parametro a ser inserido corretamente, conforme necessidade. </summary>
+<summary>7. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema retorna crítica para o usuário, sinalizando o parâmetro a ser inserido corretamente, conforme necessidade. </summary>
 
 > Retorno esperado: 400 - **Bad Request**
 
@@ -190,7 +189,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>9. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema explode critica para o usuário, sinalizando o parametro a ser inserido corretamente, conforme necessidade.</summary>
+<summary>9. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema retorna crítica para o usuário, sinalizando o parâmetro a ser inserido corretamente, conforme necessidade.</summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
@@ -198,7 +197,7 @@ Abaixo o fluxo completo do processo e seus respectivos retornos:
 </details>
 
 <details>
-<summary>10. Realizando a exclusão de uma pessoa que não está cadastrada em Sistema através do **DELETE**.</summary>
+<summary>10. Realizando a exclusão de uma pessoa que não está cadastrada no Sistema através do **DELETE**.</summary>
 
 > Retorno esperado: 404 – **Not Found**
 
@@ -262,13 +261,13 @@ ___
    pelas requisições em objetos que fizessem a representação das classes Pessoa, Endereço e 
    Eletrodoméstico. A utilização foi frustrada por erros apresentados no start da aplicação, 
    ao importar a dependência JMapper. 
-   Após pesquisas e análise, optou-se pela utilização de builders nas classes DTO, com métodos 
+   Após pesquisas e análises, optou-se pela utilização de builders nas classes DTO, com métodos 
    toPessoa(), toEndereco() e toEletrodomestico().
    Com a implementação, foi possível:
    
    •	Garantir aderência ao SRP – Single Responsability Principle, deixando a cargo das classes 
       DTO a responsabilidade pelo contato inicial com a requisição e pela aplicação da validação 
-      de beans e para as classes de domínio a aplicação de regras inerentes ao negócio; e
+      de beans e para as classes de domínio a aplicação de regras inerentes ao negócio;
       
    •	Mitigar fragilidade de segurança, tornando restrito o acesso a alterações do atributo dataEntrada, 
       implementado nas três classes de domínio. 
@@ -291,7 +290,7 @@ ___
 ## 🏁 Considerações Finais
 
 <p align="justify">
-   O sistema de cadastro de pessoa, eletrodoméstico e endereços implementado com a
+   O sistema de cadastro de pessoa, eletrodoméstico e endereço implementado com a
    arquitetura de microserviços utilizando Spring Boot e outras tecnologias modernas demonstra
    um alto nível de escalabilidade, modularidade e flexibilidade. O uso de bibliotecas como
    Lombok e Bean Validation contribuiu para a produtividade, reduzindo a quantidade de código
@@ -300,7 +299,7 @@ ___
    software.
    Dessa forma, o sistema oferece uma solução robusta para o cadastro de pessoas,
    eletrodomésticos e endereços, atendendo às necessidades do projeto e proporcionando uma
-   experiência confiável para os usuários finais. 
+   experiência confiável para o usuário final. 
 </p>
 
 ___
