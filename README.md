@@ -105,13 +105,14 @@ A Request abaixo responsável pelo cadastro de pessoa, tem como obrigatoriedade 
 
 <p align="justify">
 
-Caso a requisição seja realizada com um dos campos NULO ou BRANCO, o sistema retorna crítica, impossibilitando que a requisição seja concluída. Como consequência, temos o Response nos retornando o status **400 – Bad request.**
+Caso a requisição seja realizada com um dos campos **NULO** ou **BRANCO**, o sistema retorna crítica, impossibilitando que a requisição seja concluída. Como consequência, temos o Response nos retornando o status **400 – Bad request.**
 
-Caso na requisição de POST seja identificada a duplicidade de registro, temos o Response nos retornando
-o status **422 – Unprocessable Entity.**
+Quanto aos dados já inseridos no sistema, ou seja, dados validos, realizamos a validação onde aponta se há ou não duplicidade, caso a duplicidade for existente, temos o Response nos retornando o status **422 – Unprocessable Entity.**
 
-Caso na requisiçao de GET não seja encontrado o registro, temos o Response nos retornando
-o status **404 – Not found.**
+Quanto a dados inexistentes, uma vez solicitado na requisição, o Sistema realiza a validação e caso as informações enviadas não sejam encontradas, temos o Response nos retornando o status **404 – Not Found.**
+
+Quanto a requisições validas, onde o preenchimento dos campos obrigatórios são preenchidos de forma correta, temos o Response nos retornando o status **200 – OK.** Para requisições do tipo POST temos o retorno **201 - CREATED.** 
+
 </p>
 
 <p align="justify">
@@ -122,76 +123,110 @@ Para realizar as validações, utilizamos o FrameWork “Bean Validation“.
 
 Abaixo o fluxo completo do processo e seus respectivos retornos:
 
+
 <details>
-<summary>1. Ao realizar o cadastro de uma pessoa, o campo “nome” foi inserido como null. </summary>
+<summary>1. Ao realizar o cadastro de uma nova pessoa com todos os campos corretos, a pessoa é criada com sucesso.</summary>
+
+> Retorno esperado: 201 – **Created**
+
+![13_post_sucesso.png](github%20imgs%2F13_post_sucesso.png)
+</details>
+
+
+<details>
+<summary>2. Ao realizar o cadastro de uma pessoa, o campo “nome” foi inserido como null. </summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
-![GET consulta uma pessoa- nome null - retorno 400 bad request.png](github%20imgs%2FGET%20consulta%20uma%20pessoa-%20nome%20null%20-%20retorno%20400%20bad%20request.png)
+![01_post_valida_nome_pessoa.png](github%20imgs%2F01_post_valida_nome_pessoa.png)
 </details>
 
 <details>
-<summary> 2. Realizando a consulta de uma pessoa através do GET, passando o campo “dataNascimento” null. </summary>
+<summary>3. Ao tentar realizar o cadastro de uma pessoa já cadastrada no Sistema através do **POST**, é apresentada uma critica de duplicidade de registros. Essa por sua vez, impede que a ação seja executada.</summary>
+
+> Retorno esperado: 422 - **Unprocessable Entity**
+
+![12_post_duplicidade.png](github%20imgs%2F12_post_duplicidade.png)
+</details>
+
+<details>
+<summary> 4. Realizando a consulta de uma pessoa através do **GET**, passando o campo “dataNascimento” null. </summary>
 
 > Retorno esperado: 400 – **Bad Request** 
 
-![GET consulta uma pessoa - dataNascimento null - retorno 400 bad request.png](github%20imgs%2FGET%20consulta%20uma%20pessoa%20-%20dataNascimento%20null%20-%20retorno%20400%20bad%20request.png)
+![02_get_valida_dtnas_pessoa_.png](github%20imgs%2F02_get_valida_dtnas_pessoa_.png)
 </details>
 
 <details>
-<summary>3. Realizando consulta de lista de pessoas através do GET, sem a necessidade de campos. Neste momento é exibida a lista de pessoas cadastrada no sistema.</summary>
+<summary>5. Realizando consulta de lista de pessoas através do **GET**, sem a necessidade de campos. Neste momento é exibida a lista de pessoas cadastrada no sistema.</summary>
 
 > Retorno esperado: 200 – **OK**
 
-![GET consulta lista pessoas - retorno 200 OK.png](github%20imgs%2FGET%20consulta%20lista%20pessoas%20-%20retorno%20200%20OK.png)
+![03_get_retorna_lista_pessoa_nv.png](github%20imgs%2F03_get_retorna_lista_pessoa_nv.png)
 </details>
 
 <details>
-<summary>4. Realizando a consulta de uma pessoa em específico através do GET, com o preenchimento dos campos de forma correta.</summary>
+<summary>6. Realizando a consulta de uma pessoa em específico através do **GET**, com o preenchimento dos campos de forma correta.</summary>
 
 > Retorno esperado: 200 – **OK**
 
-![GET consulta uma pessoa - campos corretos- retorno 200 OK.png](github%20imgs%2FGET%20consulta%20uma%20pessoa%20-%20campos%20corretos-%20retorno%20200%20OK.png)
+![04_get_retorna_pessoa_nv.png](github%20imgs%2F04_get_retorna_pessoa_nv.png)
 </details>
 
 <details>
-<summary>5. Realizando alteração em uma pessoa já cadastrada no sistema através do PUT com o campo “sexo” null.</summary>
+<summary>7. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema explode critica para o usuário, sinalizando o parametro a ser inserido corretamente, conforme necessidade. </summary>
+
+> Retorno esperado: 400 - **Bad Request**
+
+![05_put_valida_sexo_pessoa.png](github%20imgs%2F05_put_valida_sexo_pessoa.png)
+</details>
+
+<details>
+<summary>8. Tentando realizar a alteração de uma pessoa inexistente no Sistema, através do **PUT**.</summary>
+
+> Retorno esperado: 404 – **Not Found**
+
+![10_put_autalizando_pessoa_inexistente.png](github%20imgs%2F10_put_autalizando_pessoa_inexistente.png)
+</details>
+
+<details>
+<summary>9. Tentando realizar a alteração de uma pessoa existente no sistema através do **PUT**, porém com a inserção do dado no campo “SEXO” inválido. Sistema explode critica para o usuário, sinalizando o parametro a ser inserido corretamente, conforme necessidade.</summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
-![PUT alteracao pessoa - sexo null - retorno 400 Bad Request.png](github%20imgs%2FPUT%20alteracao%20pessoa%20-%20sexo%20null%20-%20retorno%20400%20Bad%20Request.png)
+![11_put_passagem_de_param_errado.png](github%20imgs%2F11_put_passagem_de_param_errado.png)
 </details>
 
 <details>
-<summary>6. Realizando a exclusão de uma pessoa que não está cadastrada em Sistema através do DELETE.</summary>
+<summary>10. Realizando a exclusão de uma pessoa que não está cadastrada em Sistema através do **DELETE**.</summary>
+
+> Retorno esperado: 404 – **Not Found**
+
+![06_delete_valida_dados_pessoa_nv.png](github%20imgs%2F06_delete_valida_dados_pessoa_nv.png)
+</details>
+
+<details>
+<summary>11. Realizando a exclusão de uma pessoa que está cadastrada em Sistema através do **DELETE**, porém com o campo “nome” null.</summary>
 
 > Retorno esperado: 400 – **Bad Request**
 
-![DELETE - pessoa inexistente - retorno 400 Bad Request.png](github%20imgs%2FDELETE%20-%20pessoa%20inexistente%20-%20retorno%20400%20Bad%20Request.png)
+![08_delete_valida_nome_pessoa.png](github%20imgs%2F08_delete_valida_nome_pessoa.png)
 </details>
 
 <details>
-<summary>7. Realizando a exclusão de uma pessoa que está cadastrada em Sistema através do DELETE, porém com o campo “nome” null.</summary>
-
-> Retorno esperado: 400 – **Bad Request**
-
-![DELETE - pessoa existente nome null - retorno 400 Bad Request.png](github%20imgs%2FDELETE%20-%20pessoa%20existente%20nome%20null%20-%20retorno%20400%20Bad%20Request.png)
-</details>
-
-<details>
-<summary>8. Realizando a exclusão de uma pessoa cadastrada no sistema através do DELETE, com o preenchimento correto dos campos.</summary>
+<summary>12. Realizando a exclusão de uma pessoa cadastrada no sistema através do **DELETE**, com o preenchimento correto dos campos.</summary>
 
 > Retorno esperado: 200 – **OK**
 
-![DELETE - pessoa existente campos corretos - retorno 200 OK.png](github%20imgs%2FDELETE%20-%20pessoa%20existente%20campos%20corretos%20-%20retorno%20200%20OK.png)
+![07_delete_pessoa_sucesso.png](github%20imgs%2F07_delete_pessoa_sucesso.png)
 </details>
 
 <details>
-<summary>9. Realizando novamente a busca de uma pessoa através do GET, após essa mesma pessoa ser deletada.</summary>
+<summary>13. Realizando novamente a busca de uma pessoa através do **GET**, após essa mesma pessoa ser deletada.</summary>
 
-> Retorno esperado: 400 – **Bad Request**
+> Retorno esperado: 404 – **Not Found**
 
-![GET - consulta pessoa recem excluida - retorno 400 Bad Request.png](github%20imgs%2FGET%20-%20consulta%20pessoa%20recem%20excluida%20-%20retorno%20400%20Bad%20Request.png)
+![09_get_consulta_pessoa_deletada_nv.png](github%20imgs%2F09_get_consulta_pessoa_deletada_nv.png)
 </details>
 
 ___
