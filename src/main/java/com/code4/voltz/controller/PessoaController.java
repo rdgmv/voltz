@@ -1,12 +1,10 @@
 package com.code4.voltz.controller;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.code4.voltz.controller.form.PessoaConsultaEExclusaoForm;
+import com.code4.voltz.repositorio.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +28,8 @@ public class PessoaController {
 	@Autowired
 	private RepositorioPessoa repo;
 
+	@Autowired
+	private PessoaRepository pessoaRepository;
 	@PostMapping
 	public ResponseEntity<?> cadastrarPessoa(@RequestBody PessoaCadastroEAtualizacaoForm pessoaCadastroForm) {
 		Map<Path, String> violacoesMap = validar(pessoaCadastroForm);
@@ -40,12 +40,8 @@ public class PessoaController {
 
 			Pessoa pessoa = pessoaCadastroForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.salvar(pessoa);
+			pessoaRepository.save(pessoa);
 
-			if (opPessoa.isEmpty()){
-				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).
-						body("Duplicidade: pessoa já cadastrada no sistema.");
-			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
 		}
 	}
@@ -59,13 +55,15 @@ public class PessoaController {
 		} else {
 			Pessoa pessoa = pessoaConsultaForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.buscar(pessoa.getNome(), pessoa.getDataNascimento());
+			List<Pessoa> listPessoa =
+					pessoaRepository.findByNomeAndDataNascimento(pessoa.getNome(), pessoa.getDataNascimento());
 
-			if (opPessoa.isEmpty()) {
+			if (listPessoa.isEmpty()){
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
 			} else {
-				return ResponseEntity.ok(opPessoa.get());
+				return ResponseEntity.ok(listPessoa);
 			}
+
 		}
 
 	}

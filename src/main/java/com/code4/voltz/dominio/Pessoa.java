@@ -2,14 +2,22 @@ package com.code4.voltz.dominio;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @NoArgsConstructor(force = true)
 @Getter
 @RequiredArgsConstructor
 @EqualsAndHashCode(of = {"nome", "dataNascimento"})
+@Entity
 public class Pessoa {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 	@Setter
 	@NonNull
 	private String nome;
