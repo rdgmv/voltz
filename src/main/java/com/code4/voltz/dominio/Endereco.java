@@ -2,10 +2,7 @@ package com.code4.voltz.dominio;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor(force = true)
@@ -33,6 +30,11 @@ public class Endereco {
 	@Setter
 	@NonNull
 	private String estado;
+
+	@OneToOne
+	@JoinColumn(name = "id_usuario")
+	@NonNull
+	private Usuario usuario;
 
 	private LocalDate dataEntrada = LocalDate.now();
 

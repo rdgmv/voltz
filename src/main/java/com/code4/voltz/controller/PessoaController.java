@@ -70,7 +70,7 @@ public class PessoaController {
 
 	@GetMapping(value = { "/" })
 	public ResponseEntity<Collection<Pessoa>> findAll() {
-		var pessoas = repo.findAll();
+		var pessoas = pessoaRepository.findAll();
 		return ResponseEntity.ok(pessoas);
 	}
 
@@ -83,12 +83,12 @@ public class PessoaController {
 		} else {
 			Pessoa pessoa = pessoaExclusaoForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.buscar(pessoa.getNome(), pessoa.getDataNascimento());
+			List<Pessoa> listPessoa =
+					pessoaRepository.findByNomeAndDataNascimento(pessoa.getNome(), pessoa.getDataNascimento());
 
-			if (opPessoa.isEmpty()) {
+			if (listPessoa.isEmpty()) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
 			} else {
-				repo.excluir(pessoa);
 				return ResponseEntity.ok("Pessoa excluída com sucesso.");
 			}
 		}

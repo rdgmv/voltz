@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.code4.voltz.dominio.Pessoa;
+import com.code4.voltz.repositorio.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +36,9 @@ public class EnderecoController {
 	RepositorioEndereco repo;
 
 	@Autowired
+	EnderecoRepository enderecoRepository;
+
+	@Autowired
 	private Validator validator;
 
 	@PostMapping
@@ -47,12 +51,8 @@ public class EnderecoController {
 
 			Endereco endereco = enderecoCadastroForm.toEndereco();
 
-			Optional<Endereco> opEndereco = repo.salvar(endereco);
+			enderecoRepository.save(endereco);
 
-			if (opEndereco.isEmpty()){
-				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).
-						body("Duplicidade: endereço já cadastrado no sistema.");
-			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
 		}
 

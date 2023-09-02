@@ -1,6 +1,7 @@
 package com.code4.voltz.controller.form;
 
 import com.code4.voltz.dominio.Endereco;
+import com.code4.voltz.dominio.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.NotNull;
@@ -22,10 +23,13 @@ public class EnderecoCadastroEAtualizacaoForm {
 	@NotNull(message = "Campo estado não pode ser branco ou nulo.")
 	@JsonProperty
 	private String estado;
+	@NotNull(message = "Campo usuário não pode ser branco ou nulo.")
+	@JsonProperty
+	private Usuario usuario;
 	
 
 	public Endereco toEndereco() {
-		return new Endereco(rua, numero, bairro, cidade, estado); 
+		return new Endereco(rua, numero, bairro, cidade, estado, usuario);
 	}
 
 }
