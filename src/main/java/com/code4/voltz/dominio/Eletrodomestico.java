@@ -17,6 +17,7 @@ public class Eletrodomestico {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter
 	private int id;
 	@Setter
 	@NonNull

@@ -95,25 +95,37 @@ public class PessoaController {
 
 	}
 
-	@PutMapping
-	public ResponseEntity<?> atualizarPessoa(@RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm) {
-		Map<Path, String> violacoesMap = validar(pessoaAtualizacaoForm);
+	@PutMapping("/{id}")
+	public ResponseEntity<?> atualizarPessoa(@PathVariable int id, @RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm) {
+	    Map<Path, String> violacoesMap = validar(pessoaAtualizacaoForm);
 
-		if (!violacoesMap.isEmpty()) {
-			return ResponseEntity.badRequest().body(violacoesMap);
-		} else {
+	    if (!violacoesMap.isEmpty()) {
+	        return ResponseEntity.badRequest().body(violacoesMap);
+	    } else {
+	        // Verificamos se a pessoa com o ID fornecido existe no banco de dados
+	        Optional<Pessoa> pessoaExistente = pessoaRepository.findById(id);
 
-			Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
+	        if (pessoaExistente.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
+	        } else {
+	            Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
 
-			Optional<Pessoa> opPessoa = repo.atualizar(pessoa);
-			
-			if (opPessoa.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
-			} else {
-				return ResponseEntity.ok(opPessoa.get());
-			}
-		}
+	            // Atualizamos as propriedades da pessoa existente com as do objeto recebido
+	            Pessoa pessoaAtualizada = pessoaExistente.get();
+	            pessoaAtualizada.setNome(pessoa.getNome());
+	            pessoaAtualizada.setDataNascimento(pessoa.getDataNascimento());
+	            pessoaAtualizada.setSexo(pessoa.getSexo());
+	            pessoaAtualizada.setParentescoComUsuario(pessoa.getParentescoComUsuario());
+	            // Continue com a atualização de outros campos, se necessário
+
+	            // Salve as alterações no banco de dados
+	            Pessoa pessoaSalva = pessoaRepository.save(pessoaAtualizada);
+	            return ResponseEntity.ok(pessoaSalva);
+	        }
+	    }
 	}
+
+
 
 	private <T> Map<Path, String> validar(T dto) {
 		Set<ConstraintViolation<T>> violacoes = validator.validate(dto);

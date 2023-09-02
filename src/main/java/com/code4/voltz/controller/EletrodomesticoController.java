@@ -6,12 +6,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.code4.voltz.dominio.Endereco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.code4.voltz.controller.form.EletrodomesticoCadastroEAtualizacaoForm;
 import com.code4.voltz.controller.form.EletrodomesticoConsultaEExclusaoForm;
 import com.code4.voltz.dominio.Eletrodomestico;
+import com.code4.voltz.repositorio.EletrodomesticoRepository;
 import com.code4.voltz.repositorio.RepositorioEletrodomestico;
 
 import jakarta.validation.ConstraintViolation;
@@ -32,6 +33,9 @@ import jakarta.validation.Validator;
 public class EletrodomesticoController {
 	@Autowired
 	RepositorioEletrodomestico repo;
+	
+	@Autowired
+	EletrodomesticoRepository eletrodomesticoRepository; 
 
 	@Autowired
 	private Validator validator;
@@ -46,19 +50,16 @@ public class EletrodomesticoController {
 
 			Eletrodomestico eletrodomestico = eletrodomesticoCadastroForm.toEletrodomestico();
 
-			Optional<Eletrodomestico> opEletrodomestico = repo.salvar(eletrodomestico);
+			eletrodomesticoRepository.save(eletrodomestico);
 
-			if (opEletrodomestico.isEmpty()){
-				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).
-						body("Duplicidade: eletrodoméstico já cadastrado no sistema.");
-			}
+
 			return ResponseEntity.status(HttpStatus.CREATED).body(eletrodomestico);
 		}
 
 	}
 
 	@GetMapping
-	public ResponseEntity<?> consultaEndereco(@RequestBody EletrodomesticoConsultaEExclusaoForm eletrodomesticoConsultaForm) {
+	public ResponseEntity<?> consultaEletrodomestico(@RequestBody EletrodomesticoConsultaEExclusaoForm eletrodomesticoConsultaForm) {
 		Map<Path, String> violacoesMap = validar(eletrodomesticoConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -66,12 +67,13 @@ public class EletrodomesticoController {
 		} else {
 			Eletrodomestico eletrodomestico = eletrodomesticoConsultaForm.toEletrodomestico();
 
-			Optional<Eletrodomestico> opEletrodomestico = repo.buscar(eletrodomestico.getNome(), eletrodomestico.getModelo());
 
-			if (opEletrodomestico.isEmpty()) {
+			Eletrodomestico eletrodomesticoEncontrado = eletrodomesticoRepository.findByNomeAndModelo(eletrodomestico.getNome(), eletrodomestico.getModelo());
+			
+			if (eletrodomesticoEncontrado == null ) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Eletrodoméstico não encontrado.");
 			} else {
-				return ResponseEntity.ok(opEletrodomestico.get());
+				return ResponseEntity.ok(eletrodomesticoEncontrado);
 			}
 		}
 
@@ -79,13 +81,13 @@ public class EletrodomesticoController {
 
 	@GetMapping(value = { "/" })
 	public ResponseEntity<Collection<Eletrodomestico>> findAll() {
-		var eletrodomestico = repo.findAll();
+		var eletrodomestico = eletrodomesticoRepository.findAll();
 
 		return ResponseEntity.ok(eletrodomestico);
 	}
 
 	@DeleteMapping
-	public ResponseEntity<?> excluirEndereco(@RequestBody EletrodomesticoConsultaEExclusaoForm eletrodomesticoExclusaoForm) {
+	public ResponseEntity<?> excluirEletrodomestico(@RequestBody EletrodomesticoConsultaEExclusaoForm eletrodomesticoExclusaoForm) {
 		Map<Path, String> violacoesMap = validar(eletrodomesticoExclusaoForm);
 		
 		if (!violacoesMap.isEmpty()) {
@@ -93,37 +95,48 @@ public class EletrodomesticoController {
 		} else {
 			Eletrodomestico eletrodomestico = eletrodomesticoExclusaoForm.toEletrodomestico();
 
-			Optional<Eletrodomestico> opEletrodomestico = repo.buscar(eletrodomestico.getNome(), eletrodomestico.getModelo());
+			Eletrodomestico eletrodomesticoEncontrado = eletrodomesticoRepository.findByNomeAndModelo(eletrodomestico.getNome(), eletrodomestico.getModelo());
 
-			if (opEletrodomestico.isEmpty()) {
+			if (eletrodomesticoEncontrado == null) {
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Eletrodoméstico não encontrado.");
 			} else {
-				repo.excluir(eletrodomestico);
+				eletrodomesticoRepository.delete(eletrodomesticoEncontrado);
 				return ResponseEntity.ok("Eletrodoméstico excluído com sucesso.");
 			}
 		}
 
 	}
 
-	@PutMapping
-	public ResponseEntity<?> atualizarEndereco(@RequestBody EletrodomesticoCadastroEAtualizacaoForm eletrodomesticoAtualizacaoForm) {
-		Map<Path, String> violacoesMap = validar(eletrodomesticoAtualizacaoForm);
+	@PutMapping("/{id}")
+	public ResponseEntity<?> atualizarEletrodomestico(@PathVariable int id, @RequestBody EletrodomesticoCadastroEAtualizacaoForm eletrodomesticoAtualizacaoForm) {
+	    Map<Path, String> violacoesMap = validar(eletrodomesticoAtualizacaoForm);
 
-		if (!violacoesMap.isEmpty()) {
-			return ResponseEntity.badRequest().body(violacoesMap);
-		} else {
+	    if (!violacoesMap.isEmpty()) {
+	        return ResponseEntity.badRequest().body(violacoesMap);
+	    } else {
+	        // brothres aqui verificamos  se o eletrodoméstico com o ID fornecido existe no banco de dados
+	        Optional<Eletrodomestico> eletrodomesticoExistente = eletrodomesticoRepository.findById(id);
 
-			Eletrodomestico eletrodomestico = eletrodomesticoAtualizacaoForm.toEletrodomestico();
+	        if (eletrodomesticoExistente.isEmpty()) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Eletrodoméstico não encontrado.");
+	        } else {
+	            Eletrodomestico eletrodomestico = eletrodomesticoAtualizacaoForm.toEletrodomestico();
 
-			Optional<Eletrodomestico> opEletrodomestico = repo.atualizar(eletrodomestico);
-			
-			if (opEletrodomestico.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Eletrodoméstico não encontrado.");
-			} else {
-				return ResponseEntity.ok(opEletrodomestico.get());
-			}
-		}
+	            // Atualizamos as propriedades do eletrodoméstico existente com as do objeto recebido
+	            Eletrodomestico eletrodomesticoAtualizado = eletrodomesticoExistente.get();
+	            eletrodomesticoAtualizado.setNome(eletrodomestico.getNome());
+	            eletrodomesticoAtualizado.setModelo(eletrodomestico.getModelo());
+	            // Continue com a atualização de outras propriedades, se necessário
+
+	            // Salvamos as alterações no banco de dados
+	            Eletrodomestico eletrodomesticoSalvo = eletrodomesticoRepository.save(eletrodomesticoAtualizado);
+	            return ResponseEntity.ok(eletrodomesticoSalvo);
+	        }
+	    }
 	}
+
+
+
 
 	private <T> Map<Path, String> validar(T dto) {
 		Set<ConstraintViolation<T>> violacoes = validator.validate(dto);
