@@ -2,6 +2,7 @@ package com.code4.voltz.controller.form;
 
 import java.time.LocalDate;
 
+import com.code4.voltz.dominio.Endereco;
 import com.code4.voltz.dominio.Pessoa;
 import com.code4.voltz.dominio.Sexo;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,10 +28,12 @@ public class PessoaCadastroEAtualizacaoForm {
 	@NotBlank(message = "Campo parentesco com o usuário não pode ser branco ou nulo.")
 	private String parentescoComUsuario;
 
-
+	@JsonProperty
+	@NotBlank(message = "Campo parentesco com o usuário não pode ser branco ou nulo.")
+	private Endereco endereco;
 
 	public  Pessoa toPessoa() {
-		return new Pessoa(nome, dataNascimento, Sexo.values()[sexo], parentescoComUsuario);
+		return new Pessoa(nome, dataNascimento, Sexo.values()[sexo], parentescoComUsuario, endereco);
 	}
 
 }

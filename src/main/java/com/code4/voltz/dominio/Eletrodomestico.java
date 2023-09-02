@@ -2,10 +2,7 @@ package com.code4.voltz.dominio;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @NoArgsConstructor(force = true)
@@ -28,6 +25,11 @@ public class Eletrodomestico {
 	@Setter
 	@NonNull
 	private String potencia;
+	@ManyToOne
+	@JoinColumn(name = "endereco_id")
+	@Setter
+	@NonNull
+	private Endereco endereco;
 
 	private LocalDate dataEntrada = LocalDate.now();
 

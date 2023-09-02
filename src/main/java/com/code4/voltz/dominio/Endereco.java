@@ -32,6 +32,7 @@ public class Endereco {
 	private String estado;
 	@ManyToOne
 	@JoinColumn(name = "usuario_id")
+	@Setter
 	@NonNull
 	private Usuario usuario;
 

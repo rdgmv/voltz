@@ -45,7 +45,7 @@ public class EnderecoController {
 	}
 
 	@GetMapping(value = { "/id/{id}" })
-	public ResponseEntity<?> consultaEnderecoID(@PathVariable int id){
+	public ResponseEntity<?> consultarEnderecoId(@PathVariable int id){
 
 		Optional<Endereco> opEndereco = enderecoRepository.findById(id);
 
@@ -58,7 +58,7 @@ public class EnderecoController {
 
 	}
 	@GetMapping
-	public ResponseEntity<?> consultaEnderecoRuaENumero
+	public ResponseEntity<?> consultarEnderecoRuaENumero
 			(@RequestBody EnderecoConsultaEExclusaoForm enderecoConsultaForm) {
 		Map<Path, String> violacoesMap = validar(enderecoConsultaForm);
 
@@ -79,14 +79,14 @@ public class EnderecoController {
 		}
 	}
 	@GetMapping(value = { "/usuario/{id}" })
-	public ResponseEntity<?> consultarEnderecoUsuarioID(
+	public ResponseEntity<?> consultarEnderecoUsuarioId(
 			@PathVariable int id){
 
 		List<Endereco> listEndereco = enderecoRepository.findByUsuarioId(id);
 
 		if (listEndereco.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).
-					body("Endereço(s) não encontrado(s) para o usuário informado.");
+					body("Endereço(s) não encontrado(s) para o ID de usuário informado.");
 		} else {
 			return ResponseEntity.ok(listEndereco);
 		}
@@ -98,7 +98,7 @@ public class EnderecoController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<?> excluirEnderecoID(@PathVariable int id) {
+	public ResponseEntity<?> excluirEnderecoId(@PathVariable int id) {
 
 		Optional<Endereco> opEndereco = enderecoRepository.findById(id);
 
@@ -136,6 +136,10 @@ public class EnderecoController {
 			enderecoAtualizado.setBairro(endereco.getBairro());
 			enderecoAtualizado.setCidade(endereco.getCidade());
 			enderecoAtualizado.setEstado(endereco.getEstado());
+
+//			Solucionar erro object transient...
+//			que ocorre apenas quando da tentativa de atualização do usuário de um endereço
+//			enderecoAtualizado.setUsuario(endereco.getUsuario());
 
 			enderecoRepository.save(enderecoAtualizado);
 

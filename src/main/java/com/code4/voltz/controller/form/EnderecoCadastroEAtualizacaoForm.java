@@ -23,7 +23,7 @@ public class EnderecoCadastroEAtualizacaoForm {
 	@NotNull(message = "Campo estado não pode ser branco ou nulo.")
 	@JsonProperty
 	private String estado;
-	@NotNull(message = "Campo usuário não pode ser branco ou nulo.")
+	@NotNull(message = "Campo ID do usuário não pode ser branco ou nulo.")
 	@JsonProperty
 	private Usuario usuario;
 	
