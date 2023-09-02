@@ -30,13 +30,13 @@ public class Endereco {
 	@Setter
 	@NonNull
 	private String estado;
-
-	@OneToOne
-	@JoinColumn(name = "id_usuario")
+	@ManyToOne
+	@JoinColumn(name = "usuario_id")
 	@NonNull
 	private Usuario usuario;
 
 	private LocalDate dataEntrada = LocalDate.now();
+
 
 	public boolean identificadoPor(String rua, String numero) {
 		return this.rua.equals(rua) && this.numero.equals(numero);

@@ -96,7 +96,9 @@ public class PessoaController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> atualizarPessoa(@PathVariable int id, @RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm) {
+	public ResponseEntity<?> atualizarPessoa(
+			@PathVariable int id,
+			@RequestBody PessoaCadastroEAtualizacaoForm pessoaAtualizacaoForm) {
 	    Map<Path, String> violacoesMap = validar(pessoaAtualizacaoForm);
 
 	    if (!violacoesMap.isEmpty()) {

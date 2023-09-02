@@ -1,28 +1,17 @@
 package com.code4.voltz.controller;
 
-import java.util.Collection;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import com.code4.voltz.dominio.Pessoa;
 import com.code4.voltz.repositorio.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.code4.voltz.controller.form.EnderecoCadastroEAtualizacaoForm;
 import com.code4.voltz.controller.form.EnderecoConsultaEExclusaoForm;
 import com.code4.voltz.dominio.Endereco;
-import com.code4.voltz.repositorio.RepositorioEndereco;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
@@ -31,9 +20,6 @@ import jakarta.validation.Validator;
 @RestController
 @RequestMapping("/enderecos")
 public class EnderecoController {
-
-	@Autowired
-	RepositorioEndereco repo;
 
 	@Autowired
 	EnderecoRepository enderecoRepository;
@@ -58,8 +44,22 @@ public class EnderecoController {
 
 	}
 
+	@GetMapping(value = { "/id/{id}" })
+	public ResponseEntity<?> consultaEnderecoID(@PathVariable int id){
+
+		Optional<Endereco> opEndereco = enderecoRepository.findById(id);
+
+		if (opEndereco.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Endereço não encontrado para o ID informado.");
+		} else {
+			return ResponseEntity.ok(opEndereco.get());
+		}
+
+	}
 	@GetMapping
-	public ResponseEntity<?> consultaEndereco(@RequestBody EnderecoConsultaEExclusaoForm enderecoConsultaForm) {
+	public ResponseEntity<?> consultaEnderecoRuaENumero
+			(@RequestBody EnderecoConsultaEExclusaoForm enderecoConsultaForm) {
 		Map<Path, String> violacoesMap = validar(enderecoConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -67,62 +67,79 @@ public class EnderecoController {
 		} else {
 			Endereco endereco = enderecoConsultaForm.toEndereco();
 
-			Optional<Endereco> opEndereco = repo.buscar(endereco.getRua(), endereco.getNumero());
+			List<Endereco> listEndereco = enderecoRepository.
+					findByRuaAndNumero(endereco.getRua(), endereco.getNumero());
 
-			if (opEndereco.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
+			if (listEndereco.isEmpty()) {
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).
+						body("Endereço(s) não encontrado(s) para a rua e número informados.");
 			} else {
-				return ResponseEntity.ok(opEndereco.get());
+				return ResponseEntity.ok(listEndereco);
 			}
 		}
-
 	}
+	@GetMapping(value = { "/usuario/{id}" })
+	public ResponseEntity<?> consultarEnderecoUsuarioID(
+			@PathVariable int id){
 
+		List<Endereco> listEndereco = enderecoRepository.findByUsuarioId(id);
+
+		if (listEndereco.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Endereço(s) não encontrado(s) para o usuário informado.");
+		} else {
+			return ResponseEntity.ok(listEndereco);
+		}
+	}
 	@GetMapping(value = { "/" })
 	public ResponseEntity<Collection<Endereco>> findAll() {
-		var enderecos = repo.findAll();
-
+		var enderecos = enderecoRepository.findAll();
 		return ResponseEntity.ok(enderecos);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<?> excluirEndereco(@RequestBody EnderecoConsultaEExclusaoForm enderecoExclusaoForm) {
-		Map<Path, String> violacoesMap = validar(enderecoExclusaoForm);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> excluirEnderecoID(@PathVariable int id) {
 
-		if (!violacoesMap.isEmpty()) {
-			return ResponseEntity.badRequest().body(violacoesMap);
+		Optional<Endereco> opEndereco = enderecoRepository.findById(id);
+
+		if (opEndereco.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado para exclusão.");
 		} else {
-			Endereco endereco = enderecoExclusaoForm.toEndereco();
-
-			Optional<Endereco> opEndereco = repo.buscar(endereco.getRua(), endereco.getNumero());
-
-			if (opEndereco.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
-			} else {
-				repo.excluir(endereco);
-				return ResponseEntity.ok("Endereço excluído com sucesso.");
-			}
+			enderecoRepository.deleteById(id);
+			return ResponseEntity.ok("Endereço excluído com sucesso.");
 		}
 
 	}
 
-	@PutMapping
-	public ResponseEntity<?> atualizarEndereco(@RequestBody EnderecoCadastroEAtualizacaoForm enderecoAtualizacaoForm) {
+	@PutMapping("/{id}")
+	public ResponseEntity<?> atualizarEndereco(
+			@PathVariable int id,
+			@RequestBody EnderecoCadastroEAtualizacaoForm enderecoAtualizacaoForm) {
+
 		Map<Path, String> violacoesMap = validar(enderecoAtualizacaoForm);
 
 		if (!violacoesMap.isEmpty()) {
 			return ResponseEntity.badRequest().body(violacoesMap);
 		} else {
+			Optional<Endereco> enderecoExistente = enderecoRepository.findById(id);
+
+			if (enderecoExistente.isEmpty()){
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado para atualização.");
+			}
 
 			Endereco endereco = enderecoAtualizacaoForm.toEndereco();
 
-			Optional<Endereco> opEndereco = repo.atualizar(endereco);
-			
-			if (opEndereco.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado.");
-			} else {
-				return ResponseEntity.ok(opEndereco.get());
-			}
+			Endereco enderecoAtualizado = enderecoExistente.get();
+
+			enderecoAtualizado.setRua(endereco.getRua());
+			enderecoAtualizado.setNumero(endereco.getNumero());
+			enderecoAtualizado.setBairro(endereco.getBairro());
+			enderecoAtualizado.setCidade(endereco.getCidade());
+			enderecoAtualizado.setEstado(endereco.getEstado());
+
+			enderecoRepository.save(enderecoAtualizado);
+
+			return ResponseEntity.ok(enderecoAtualizado);
 		}
 	}
 
