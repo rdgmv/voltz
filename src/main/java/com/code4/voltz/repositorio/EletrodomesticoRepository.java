@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EletrodomesticoRepository extends JpaRepository<Eletrodomestico, Integer> {
 	List<Eletrodomestico> findByNomeAndModelo(String nome, String modelo);
-	List<Eletrodomestico> findByEnderecoId(long id);
+	List<Eletrodomestico> findByEnderecoId(int id);
 
 }

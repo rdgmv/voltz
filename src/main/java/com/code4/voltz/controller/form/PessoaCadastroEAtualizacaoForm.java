@@ -29,7 +29,7 @@ public class PessoaCadastroEAtualizacaoForm {
 	private String parentescoComUsuario;
 
 	@JsonProperty
-	@NotBlank(message = "Campo parentesco com o usuário não pode ser branco ou nulo.")
+	@NotNull(message = "Campo ID do endereço não pode ser branco ou nulo.")
 	private Endereco endereco;
 
 	public  Pessoa toPessoa() {

@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.code4.voltz.controller.form.PessoaConsultaEExclusaoForm;
+import com.code4.voltz.dominio.Endereco;
+import com.code4.voltz.repositorio.EnderecoRepository;
 import com.code4.voltz.repositorio.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.code4.voltz.controller.form.PessoaCadastroEAtualizacaoForm;
 import com.code4.voltz.dominio.Pessoa;
-import com.code4.voltz.repositorio.RepositorioPessoa;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
@@ -26,10 +27,10 @@ public class PessoaController {
 	private Validator validator;
 
 	@Autowired
-	private RepositorioPessoa repo;
+	private PessoaRepository pessoaRepository;
 
 	@Autowired
-	private PessoaRepository pessoaRepository;
+	private EnderecoRepository enderecoRepository;
 	@PostMapping
 	public ResponseEntity<?> cadastrarPessoa(@RequestBody PessoaCadastroEAtualizacaoForm pessoaCadastroForm) {
 		Map<Path, String> violacoesMap = validar(pessoaCadastroForm);
@@ -46,8 +47,22 @@ public class PessoaController {
 		}
 	}
 
+	@GetMapping(value = { "/id/{id}" })
+	public ResponseEntity<?> consultarPessoaId(@PathVariable int id){
+
+		Optional<Pessoa> opPessoa = pessoaRepository.findById(id);
+
+		if (opPessoa.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Pessoa não encontrada para o ID informado.");
+		} else {
+			return ResponseEntity.ok(opPessoa.get());
+		}
+
+	}
 	@GetMapping
-	public ResponseEntity<?> consultarPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaConsultaForm) {
+	public ResponseEntity<?> consultarPessoaNomeEDataNascimento(
+			@RequestBody PessoaConsultaEExclusaoForm pessoaConsultaForm) {
 		Map<Path, String> violacoesMap = validar(pessoaConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -67,6 +82,65 @@ public class PessoaController {
 		}
 
 	}
+	@GetMapping(value = { "/usuario/{id}" })
+	public ResponseEntity<?> consultarPessoaUsuarioId(
+			@PathVariable int id){
+
+		List<Endereco> listEndereco = enderecoRepository.findByUsuarioId(id);
+		if (listEndereco.isEmpty()){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Pessoa(s) não encontrada(s) para o ID de usuário informado.");
+		}
+
+		List<Pessoa> listPessoasDeUmUsuario = new ArrayList<>();
+		for (Endereco endereco : listEndereco){
+			List<Pessoa> listPessoasDeUmEndereco =
+					pessoaRepository.findByEnderecoId(endereco.getId());
+			listPessoasDeUmUsuario.addAll(listPessoasDeUmEndereco);
+		}
+
+		if (listPessoasDeUmUsuario.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Pessoa(s) não encontrada(s) para o ID de usuário informado.");
+		} else {
+			return ResponseEntity.ok(listPessoasDeUmUsuario);
+		}
+	}
+	@GetMapping(value = { "/endereco/{id}" })
+	public ResponseEntity<?> consultarPessoaEnderecoId(
+			@PathVariable int id){
+
+		List<Pessoa> listPessoa = pessoaRepository.findByEnderecoId(id);
+
+		if (listPessoa.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Pessoa(s) não encontrada(s) para o ID de endereço informado.");
+		} else {
+			return ResponseEntity.ok(listPessoa);
+		}
+	}
+	@GetMapping(value = { "/usuarioendereco/{idUsr}/{idEnd}" })
+	public ResponseEntity<?> consultarPessoaUsuarioIdEEnderecoId(
+			@PathVariable int idUsr,
+			@PathVariable int idEnd){
+
+		List<Endereco> listEnderecosDeUmUsuario = enderecoRepository.findByUsuarioId(idUsr);
+
+		List<Pessoa> listPessoasDeUmUsuarioEEndereco = new ArrayList<>();
+		for (Endereco endereco : listEnderecosDeUmUsuario){
+			if (endereco.getId() == idEnd) {
+				listPessoasDeUmUsuarioEEndereco.
+						addAll(pessoaRepository.findByEnderecoId(endereco.getId()));
+			}
+		}
+
+		if (listPessoasDeUmUsuarioEEndereco.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).
+					body("Eletrodoméstico(s) não encontrado(s) para os IDs de usuário e endereço informados.");
+		} else {
+			return ResponseEntity.ok(listPessoasDeUmUsuarioEEndereco);
+		}
+	}
 
 	@GetMapping(value = { "/" })
 	public ResponseEntity<Collection<Pessoa>> findAll() {
@@ -74,23 +148,16 @@ public class PessoaController {
 		return ResponseEntity.ok(pessoas);
 	}
 
-	@DeleteMapping
-	public ResponseEntity<?> excluirPessoa(@RequestBody PessoaConsultaEExclusaoForm pessoaExclusaoForm) {
-		Map<Path, String> violacoesMap = validar(pessoaExclusaoForm);
+	@DeleteMapping("/{id}")
+	public ResponseEntity<?> excluirPessoaId(@PathVariable int id) {
 
-		if (!violacoesMap.isEmpty()) {
-			return ResponseEntity.badRequest().body(violacoesMap);
+		Optional<Pessoa> opPessoa = pessoaRepository.findById(id);
+
+		if (opPessoa.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada para exclusão.");
 		} else {
-			Pessoa pessoa = pessoaExclusaoForm.toPessoa();
-
-			List<Pessoa> listPessoa =
-					pessoaRepository.findByNomeAndDataNascimento(pessoa.getNome(), pessoa.getDataNascimento());
-
-			if (listPessoa.isEmpty()) {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
-			} else {
-				return ResponseEntity.ok("Pessoa excluída com sucesso.");
-			}
+			pessoaRepository.deleteById(id);
+			return ResponseEntity.ok("Pessoa excluída com sucesso.");
 		}
 
 	}
@@ -118,11 +185,12 @@ public class PessoaController {
 	            pessoaAtualizada.setDataNascimento(pessoa.getDataNascimento());
 	            pessoaAtualizada.setSexo(pessoa.getSexo());
 	            pessoaAtualizada.setParentescoComUsuario(pessoa.getParentescoComUsuario());
+				pessoaAtualizada.setEndereco(pessoa.getEndereco());
 	            // Continue com a atualização de outros campos, se necessário
 
 	            // Salve as alterações no banco de dados
-	            Pessoa pessoaSalva = pessoaRepository.save(pessoaAtualizada);
-	            return ResponseEntity.ok(pessoaSalva);
+	            pessoaRepository.save(pessoaAtualizada);
+	            return ResponseEntity.ok(pessoaAtualizada);
 	        }
 	    }
 	}

@@ -21,7 +21,6 @@ import com.code4.voltz.controller.form.EletrodomesticoCadastroEAtualizacaoForm;
 import com.code4.voltz.controller.form.EletrodomesticoConsultaEExclusaoForm;
 import com.code4.voltz.dominio.Eletrodomestico;
 import com.code4.voltz.repositorio.EletrodomesticoRepository;
-import com.code4.voltz.repositorio.RepositorioEletrodomestico;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Path;
@@ -196,12 +195,11 @@ public class EletrodomesticoController {
 
 	            eletrodomesticoAtualizado.setNome(eletrodomestico.getNome());
 	            eletrodomesticoAtualizado.setModelo(eletrodomestico.getModelo());
-				eletrodomesticoAtualizado.setPotencia((eletrodomestico.getPotencia()));
+				eletrodomesticoAtualizado.setPotencia(eletrodomestico.getPotencia());
 				eletrodomesticoAtualizado.setEndereco(eletrodomestico.getEndereco());
 	            // Continue com a atualização de outras propriedades, se necessário
 
 	            // Salvamos as alterações no banco de dados
-//	            Eletrodomestico eletrodomesticoSalvo = eletrodomesticoRepository.save(eletrodomesticoAtualizado);
 
 				eletrodomesticoRepository.save(eletrodomesticoAtualizado);
 	            return ResponseEntity.ok(eletrodomesticoAtualizado);

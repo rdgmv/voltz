@@ -131,15 +131,13 @@ public class EnderecoController {
 
 			Endereco enderecoAtualizado = enderecoExistente.get();
 
+
 			enderecoAtualizado.setRua(endereco.getRua());
 			enderecoAtualizado.setNumero(endereco.getNumero());
 			enderecoAtualizado.setBairro(endereco.getBairro());
 			enderecoAtualizado.setCidade(endereco.getCidade());
 			enderecoAtualizado.setEstado(endereco.getEstado());
-
-//			Solucionar erro object transient...
-//			que ocorre apenas quando da tentativa de atualização do usuário de um endereço
-//			enderecoAtualizado.setUsuario(endereco.getUsuario());
+			enderecoAtualizado.setUsuario(endereco.getUsuario());
 
 			enderecoRepository.save(enderecoAtualizado);
 

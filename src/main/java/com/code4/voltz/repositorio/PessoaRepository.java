@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Integer>{
     List<Pessoa> findByNomeAndDataNascimento(String nome, LocalDate dataNascimento);
+    List<Pessoa> findByEnderecoId(int id);
+
 }
