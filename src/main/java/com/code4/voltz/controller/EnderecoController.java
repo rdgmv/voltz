@@ -3,14 +3,20 @@ package com.code4.voltz.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.code4.voltz.dominio.Eletrodomestico;
+import com.code4.voltz.dominio.Pessoa;
+import com.code4.voltz.dominio.Usuario;
+import com.code4.voltz.repositorio.EletrodomesticoRepository;
 import com.code4.voltz.repositorio.EnderecoRepository;
+import com.code4.voltz.repositorio.PessoaRepository;
+import com.code4.voltz.repositorio.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.code4.voltz.controller.form.EnderecoCadastroEAtualizacaoForm;
-import com.code4.voltz.controller.form.EnderecoConsultaEExclusaoForm;
+import com.code4.voltz.controller.form.EnderecoConsultaForm;
 import com.code4.voltz.dominio.Endereco;
 
 import jakarta.validation.ConstraintViolation;
@@ -22,7 +28,16 @@ import jakarta.validation.Validator;
 public class EnderecoController {
 
 	@Autowired
-	EnderecoRepository enderecoRepository;
+	private EnderecoRepository enderecoRepository;
+
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+
+	@Autowired
+	private EletrodomesticoRepository eletrodomesticoRepository;
+
+	@Autowired
+	private PessoaRepository pessoaRepository;
 
 	@Autowired
 	private Validator validator;
@@ -37,9 +52,17 @@ public class EnderecoController {
 
 			Endereco endereco = enderecoCadastroForm.toEndereco();
 
-			enderecoRepository.save(endereco);
+			Optional<Usuario> usuario = usuarioRepository.findById(endereco.getUsuario().getId());
 
-			return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
+			if (usuario.isEmpty()){
+				return ResponseEntity.badRequest().
+						body("Usuário informado para o cadastramento do endereço não encontrado.");
+			} else {
+				endereco.setUsuario(usuario.get());
+				enderecoRepository.save(endereco);
+				return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
+			}
+
 		}
 
 	}
@@ -59,7 +82,7 @@ public class EnderecoController {
 	}
 	@GetMapping
 	public ResponseEntity<?> consultarEnderecoRuaENumero
-			(@RequestBody EnderecoConsultaEExclusaoForm enderecoConsultaForm) {
+			(@RequestBody EnderecoConsultaForm enderecoConsultaForm) {
 		Map<Path, String> violacoesMap = validar(enderecoConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -105,8 +128,19 @@ public class EnderecoController {
 		if (opEndereco.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Endereço não encontrado para exclusão.");
 		} else {
-			enderecoRepository.deleteById(id);
-			return ResponseEntity.ok("Endereço excluído com sucesso.");
+
+			List<Pessoa> listPessoa = pessoaRepository.findByEnderecoId(id);
+			List<Eletrodomestico> listEletrodomestico = eletrodomesticoRepository.findByEnderecoId(id);
+
+			if (listPessoa.isEmpty() && listEletrodomestico.isEmpty()){
+				enderecoRepository.deleteById(id);
+				return ResponseEntity.ok("Endereço excluído com sucesso.");
+			} else {
+				return ResponseEntity.badRequest().body("Exclusão não permitida. Endereço possui pessoa(s) " +
+						"e/ou eletrodoméstico(s) vinculado(s). " +
+						"Para exclui-lo, desfaça primeiramente o(s) vínculo(s).");
+			}
+
 		}
 
 	}
@@ -131,12 +165,19 @@ public class EnderecoController {
 
 			Endereco enderecoAtualizado = enderecoExistente.get();
 
-
 			enderecoAtualizado.setRua(endereco.getRua());
 			enderecoAtualizado.setNumero(endereco.getNumero());
 			enderecoAtualizado.setBairro(endereco.getBairro());
 			enderecoAtualizado.setCidade(endereco.getCidade());
 			enderecoAtualizado.setEstado(endereco.getEstado());
+
+			Optional<Usuario> usuario = usuarioRepository.findById(endereco.getUsuario().getId());
+
+			if (usuario.isEmpty()){
+				return ResponseEntity.badRequest().
+						body("Usuário informado para a atualização do endereço não encontrado.");
+			}
+
 			enderecoAtualizado.setUsuario(endereco.getUsuario());
 
 			enderecoRepository.save(enderecoAtualizado);

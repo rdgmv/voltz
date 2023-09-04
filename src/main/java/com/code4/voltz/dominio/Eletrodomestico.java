@@ -32,14 +32,7 @@ public class Eletrodomestico {
 	private Endereco endereco;
 
 	private LocalDate dataEntrada = LocalDate.now();
-
-	public boolean identificadoPor(String nome, String modelo) {
-		return this.nome.equals(nome) && this.modelo.equals(modelo);
-
-	}
-
-	public Eletrodomestico(@NonNull String nome, @NonNull String modelo) {
-		super();
+	public Eletrodomestico(String nome, String modelo) {
 		this.nome = nome;
 		this.modelo = modelo;
 	}

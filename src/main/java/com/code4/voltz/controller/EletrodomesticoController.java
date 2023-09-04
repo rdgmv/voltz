@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.code4.voltz.controller.form.EletrodomesticoCadastroEAtualizacaoForm;
-import com.code4.voltz.controller.form.EletrodomesticoConsultaEExclusaoForm;
+import com.code4.voltz.controller.form.EletrodomesticoConsultaForm;
 import com.code4.voltz.dominio.Eletrodomestico;
 import com.code4.voltz.repositorio.EletrodomesticoRepository;
 
@@ -31,10 +31,10 @@ import jakarta.validation.Validator;
 public class EletrodomesticoController {
 	
 	@Autowired
-	EletrodomesticoRepository eletrodomesticoRepository; 
+	private EletrodomesticoRepository eletrodomesticoRepository;
 
 	@Autowired
-	EnderecoRepository enderecoRepository;
+	private EnderecoRepository enderecoRepository;
 
 	@Autowired
 	private Validator validator;
@@ -50,9 +50,17 @@ public class EletrodomesticoController {
 
 			Eletrodomestico eletrodomestico = eletrodomesticoCadastroForm.toEletrodomestico();
 
-			eletrodomesticoRepository.save(eletrodomestico);
+			Optional<Endereco> endereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
 
-			return ResponseEntity.status(HttpStatus.CREATED).body(eletrodomestico);
+			if (endereco.isEmpty()){
+				return ResponseEntity.badRequest().
+						body("Endereço informado para o cadastramento do eletrodoméstico não encontrado.");
+			} else {
+				eletrodomestico.setEndereco(endereco.get());
+				eletrodomesticoRepository.save(eletrodomestico);
+				return ResponseEntity.status(HttpStatus.CREATED).body(eletrodomestico);
+			}
+
 		}
 
 	}
@@ -72,7 +80,7 @@ public class EletrodomesticoController {
 	}
 	@GetMapping
 	public ResponseEntity<?> consultarEletrodomesticoNomeEModelo(
-			@RequestBody EletrodomesticoConsultaEExclusaoForm eletrodomesticoConsultaForm) {
+			@RequestBody EletrodomesticoConsultaForm eletrodomesticoConsultaForm) {
 		Map<Path, String> violacoesMap = validar(eletrodomesticoConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -182,7 +190,6 @@ public class EletrodomesticoController {
 	    if (!violacoesMap.isEmpty()) {
 	        return ResponseEntity.badRequest().body(violacoesMap);
 	    } else {
-	        // brothres aqui verificamos  se o eletrodoméstico com o ID fornecido existe no banco de dados
 	        Optional<Eletrodomestico> eletrodomesticoExistente = eletrodomesticoRepository.findById(id);
 
 	        if (eletrodomesticoExistente.isEmpty()) {
@@ -190,16 +197,20 @@ public class EletrodomesticoController {
 	        } else {
 	            Eletrodomestico eletrodomestico = eletrodomesticoAtualizacaoForm.toEletrodomestico();
 
-	            // Atualizamos as propriedades do eletrodoméstico existente com as do objeto recebido
 	            Eletrodomestico eletrodomesticoAtualizado = eletrodomesticoExistente.get();
 
 	            eletrodomesticoAtualizado.setNome(eletrodomestico.getNome());
 	            eletrodomesticoAtualizado.setModelo(eletrodomestico.getModelo());
 				eletrodomesticoAtualizado.setPotencia(eletrodomestico.getPotencia());
-				eletrodomesticoAtualizado.setEndereco(eletrodomestico.getEndereco());
-	            // Continue com a atualização de outras propriedades, se necessário
 
-	            // Salvamos as alterações no banco de dados
+				Optional<Endereco> endereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
+
+				if (endereco.isEmpty()){
+					return ResponseEntity.badRequest().
+							body("Endereço informado para a atualização do eletrodoméstico não encontrado.");
+				}
+
+				eletrodomesticoAtualizado.setEndereco(eletrodomestico.getEndereco());
 
 				eletrodomesticoRepository.save(eletrodomesticoAtualizado);
 	            return ResponseEntity.ok(eletrodomesticoAtualizado);

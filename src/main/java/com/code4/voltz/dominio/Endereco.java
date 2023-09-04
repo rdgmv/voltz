@@ -38,14 +38,7 @@ public class Endereco {
 
 	private LocalDate dataEntrada = LocalDate.now();
 
-
-	public boolean identificadoPor(String rua, String numero) {
-		return this.rua.equals(rua) && this.numero.equals(numero);
-
-	}
-
-	public Endereco(@NonNull String rua, @NonNull String numero) {
-		super();
+	public Endereco(String rua, String numero) {
 		this.rua = rua;
 		this.numero = numero;
 	}

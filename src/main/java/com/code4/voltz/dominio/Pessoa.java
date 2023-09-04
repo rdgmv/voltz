@@ -41,11 +41,4 @@ public class Pessoa {
 		this.dataNascimento = dataNascimento;
 	}
 
-
-	public boolean identificadoPor(String nome, LocalDate dataNascimento) {
-		return this.nome.equals(nome) &&
-				this.dataNascimento.equals(dataNascimento) ;
-		
-	}
-
 }

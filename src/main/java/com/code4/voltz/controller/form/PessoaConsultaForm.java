@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
 
-public class PessoaConsultaEExclusaoForm {
+public class PessoaConsultaForm {
     @JsonProperty
     @NotBlank(message = "Campo nome não pode ser branco ou nulo.")
     private String nome;

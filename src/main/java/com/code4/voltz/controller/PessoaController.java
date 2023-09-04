@@ -3,7 +3,7 @@ package com.code4.voltz.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import com.code4.voltz.controller.form.PessoaConsultaEExclusaoForm;
+import com.code4.voltz.controller.form.PessoaConsultaForm;
 import com.code4.voltz.dominio.Endereco;
 import com.code4.voltz.repositorio.EnderecoRepository;
 import com.code4.voltz.repositorio.PessoaRepository;
@@ -41,9 +41,17 @@ public class PessoaController {
 
 			Pessoa pessoa = pessoaCadastroForm.toPessoa();
 
-			pessoaRepository.save(pessoa);
+			Optional<Endereco> endereco = enderecoRepository.findById(pessoa.getEndereco().getId());
 
-			return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
+			if (endereco.isEmpty()){
+				return ResponseEntity.badRequest().
+						body("Endereço informado para o cadastramento da pessoa não encontrado.");
+			} else {
+				pessoa.setEndereco(endereco.get());
+				pessoaRepository.save(pessoa);
+				return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
+			}
+
 		}
 	}
 
@@ -62,7 +70,7 @@ public class PessoaController {
 	}
 	@GetMapping
 	public ResponseEntity<?> consultarPessoaNomeEDataNascimento(
-			@RequestBody PessoaConsultaEExclusaoForm pessoaConsultaForm) {
+			@RequestBody PessoaConsultaForm pessoaConsultaForm) {
 		Map<Path, String> violacoesMap = validar(pessoaConsultaForm);
 
 		if (!violacoesMap.isEmpty()) {
@@ -74,7 +82,8 @@ public class PessoaController {
 					pessoaRepository.findByNomeAndDataNascimento(pessoa.getNome(), pessoa.getDataNascimento());
 
 			if (listPessoa.isEmpty()){
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pessoa não encontrada.");
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).
+						body("Pessoa não encontrada para o nome e data de nascimento informados.");
 			} else {
 				return ResponseEntity.ok(listPessoa);
 			}
@@ -171,7 +180,6 @@ public class PessoaController {
 	    if (!violacoesMap.isEmpty()) {
 	        return ResponseEntity.badRequest().body(violacoesMap);
 	    } else {
-	        // Verificamos se a pessoa com o ID fornecido existe no banco de dados
 	        Optional<Pessoa> pessoaExistente = pessoaRepository.findById(id);
 
 	        if (pessoaExistente.isEmpty()) {
@@ -179,16 +187,21 @@ public class PessoaController {
 	        } else {
 	            Pessoa pessoa = pessoaAtualizacaoForm.toPessoa();
 
-	            // Atualizamos as propriedades da pessoa existente com as do objeto recebido
 	            Pessoa pessoaAtualizada = pessoaExistente.get();
 	            pessoaAtualizada.setNome(pessoa.getNome());
 	            pessoaAtualizada.setDataNascimento(pessoa.getDataNascimento());
 	            pessoaAtualizada.setSexo(pessoa.getSexo());
 	            pessoaAtualizada.setParentescoComUsuario(pessoa.getParentescoComUsuario());
-				pessoaAtualizada.setEndereco(pessoa.getEndereco());
-	            // Continue com a atualização de outros campos, se necessário
 
-	            // Salve as alterações no banco de dados
+				Optional<Endereco> endereco = enderecoRepository.findById(pessoa.getEndereco().getId());
+
+				if (endereco.isEmpty()){
+					return ResponseEntity.badRequest().
+							body("Endereço informado para a atualização da pessoa não encontrado.");
+				}
+
+				pessoaAtualizada.setEndereco(pessoa.getEndereco());
+
 	            pessoaRepository.save(pessoaAtualizada);
 	            return ResponseEntity.ok(pessoaAtualizada);
 	        }
