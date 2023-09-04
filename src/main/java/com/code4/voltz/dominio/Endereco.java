@@ -7,7 +7,6 @@ import lombok.*;
 
 @NoArgsConstructor(force = true)
 @Getter
-@EqualsAndHashCode(of = { "rua", "numero" })
 @RequiredArgsConstructor
 @Entity
 public class Endereco {

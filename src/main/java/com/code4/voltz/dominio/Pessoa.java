@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor(force = true)
 @Getter
 @RequiredArgsConstructor
-@EqualsAndHashCode(of = {"nome", "dataNascimento"})
 @Entity
 public class Pessoa {
 

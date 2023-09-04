@@ -41,13 +41,13 @@ public class PessoaController {
 
 			Pessoa pessoa = pessoaCadastroForm.toPessoa();
 
-			Optional<Endereco> endereco = enderecoRepository.findById(pessoa.getEndereco().getId());
+			Optional<Endereco> opEndereco = enderecoRepository.findById(pessoa.getEndereco().getId());
 
-			if (endereco.isEmpty()){
+			if (opEndereco.isEmpty()){
 				return ResponseEntity.badRequest().
 						body("Endereço informado para o cadastramento da pessoa não encontrado.");
 			} else {
-				pessoa.setEndereco(endereco.get());
+				pessoa.setEndereco(opEndereco.get());
 				pessoaRepository.save(pessoa);
 				return ResponseEntity.status(HttpStatus.CREATED).body(pessoa);
 			}
@@ -193,14 +193,14 @@ public class PessoaController {
 	            pessoaAtualizada.setSexo(pessoa.getSexo());
 	            pessoaAtualizada.setParentescoComUsuario(pessoa.getParentescoComUsuario());
 
-				Optional<Endereco> endereco = enderecoRepository.findById(pessoa.getEndereco().getId());
+				Optional<Endereco> opEndereco = enderecoRepository.findById(pessoa.getEndereco().getId());
 
-				if (endereco.isEmpty()){
+				if (opEndereco.isEmpty()){
 					return ResponseEntity.badRequest().
 							body("Endereço informado para a atualização da pessoa não encontrado.");
 				}
 
-				pessoaAtualizada.setEndereco(pessoa.getEndereco());
+				pessoaAtualizada.setEndereco(opEndereco.get());
 
 	            pessoaRepository.save(pessoaAtualizada);
 	            return ResponseEntity.ok(pessoaAtualizada);

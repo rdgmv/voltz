@@ -52,13 +52,13 @@ public class EnderecoController {
 
 			Endereco endereco = enderecoCadastroForm.toEndereco();
 
-			Optional<Usuario> usuario = usuarioRepository.findById(endereco.getUsuario().getId());
+			Optional<Usuario> opUsuario = usuarioRepository.findById(endereco.getUsuario().getId());
 
-			if (usuario.isEmpty()){
+			if (opUsuario.isEmpty()){
 				return ResponseEntity.badRequest().
 						body("Usuário informado para o cadastramento do endereço não encontrado.");
 			} else {
-				endereco.setUsuario(usuario.get());
+				endereco.setUsuario(opUsuario.get());
 				enderecoRepository.save(endereco);
 				return ResponseEntity.status(HttpStatus.CREATED).body(endereco);
 			}
@@ -171,14 +171,14 @@ public class EnderecoController {
 			enderecoAtualizado.setCidade(endereco.getCidade());
 			enderecoAtualizado.setEstado(endereco.getEstado());
 
-			Optional<Usuario> usuario = usuarioRepository.findById(endereco.getUsuario().getId());
+			Optional<Usuario> opUsuario = usuarioRepository.findById(endereco.getUsuario().getId());
 
-			if (usuario.isEmpty()){
+			if (opUsuario.isEmpty()){
 				return ResponseEntity.badRequest().
 						body("Usuário informado para a atualização do endereço não encontrado.");
 			}
 
-			enderecoAtualizado.setUsuario(endereco.getUsuario());
+			enderecoAtualizado.setUsuario(opUsuario.get());
 
 			enderecoRepository.save(enderecoAtualizado);
 

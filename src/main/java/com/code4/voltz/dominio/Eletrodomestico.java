@@ -7,7 +7,6 @@ import lombok.*;
 
 @NoArgsConstructor(force = true)
 @Getter
-@EqualsAndHashCode(of = { "nome", "modelo" })
 @RequiredArgsConstructor
 @Entity
 public class Eletrodomestico {
@@ -24,7 +23,7 @@ public class Eletrodomestico {
 	private String modelo;
 	@Setter
 	@NonNull
-	private String potencia;
+	private int potencia;
 	@ManyToOne
 	@JoinColumn(name = "endereco_id")
 	@Setter

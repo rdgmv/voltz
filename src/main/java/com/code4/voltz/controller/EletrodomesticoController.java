@@ -3,7 +3,9 @@ package com.code4.voltz.controller;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.code4.voltz.dominio.Consumo;
 import com.code4.voltz.dominio.Endereco;
+import com.code4.voltz.repositorio.ConsumoRepository;
 import com.code4.voltz.repositorio.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,9 @@ public class EletrodomesticoController {
 	private EnderecoRepository enderecoRepository;
 
 	@Autowired
+	private ConsumoRepository consumoRepository;
+
+	@Autowired
 	private Validator validator;
 
 	@PostMapping
@@ -50,13 +55,13 @@ public class EletrodomesticoController {
 
 			Eletrodomestico eletrodomestico = eletrodomesticoCadastroForm.toEletrodomestico();
 
-			Optional<Endereco> endereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
+			Optional<Endereco> opEndereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
 
-			if (endereco.isEmpty()){
+			if (opEndereco.isEmpty()){
 				return ResponseEntity.badRequest().
 						body("Endereço informado para o cadastramento do eletrodoméstico não encontrado.");
 			} else {
-				eletrodomestico.setEndereco(endereco.get());
+				eletrodomestico.setEndereco(opEndereco.get());
 				eletrodomesticoRepository.save(eletrodomestico);
 				return ResponseEntity.status(HttpStatus.CREATED).body(eletrodomestico);
 			}
@@ -174,8 +179,14 @@ public class EletrodomesticoController {
 		if (opEletrodomestico.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Eletrodoméstico não encontrado para exclusão.");
 		} else {
-			eletrodomesticoRepository.deleteById(id);
-			return ResponseEntity.ok("Eletrodoméstico excluído com sucesso.");
+			List<Consumo> listConsumo = consumoRepository.findByEletrodomesticoId(id);
+			if (listConsumo.isEmpty()) {
+				eletrodomesticoRepository.deleteById(id);
+				return ResponseEntity.ok("Eletrodoméstico excluído com sucesso.");
+			} else {
+				return ResponseEntity.badRequest().body("Exclusão não permitida. Eletrodoméstico possui consumo(s) " +
+						"vinculado(s). Para exclui-lo, desfaça primeiramente o(s) vínculo(s).");
+			}
 		}
 
 	}
@@ -203,14 +214,14 @@ public class EletrodomesticoController {
 	            eletrodomesticoAtualizado.setModelo(eletrodomestico.getModelo());
 				eletrodomesticoAtualizado.setPotencia(eletrodomestico.getPotencia());
 
-				Optional<Endereco> endereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
+				Optional<Endereco> opEndereco = enderecoRepository.findById(eletrodomestico.getEndereco().getId());
 
-				if (endereco.isEmpty()){
+				if (opEndereco.isEmpty()){
 					return ResponseEntity.badRequest().
 							body("Endereço informado para a atualização do eletrodoméstico não encontrado.");
 				}
 
-				eletrodomesticoAtualizado.setEndereco(eletrodomestico.getEndereco());
+				eletrodomesticoAtualizado.setEndereco(opEndereco.get());
 
 				eletrodomesticoRepository.save(eletrodomesticoAtualizado);
 	            return ResponseEntity.ok(eletrodomesticoAtualizado);

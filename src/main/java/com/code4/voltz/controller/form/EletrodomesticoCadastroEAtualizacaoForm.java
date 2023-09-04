@@ -5,6 +5,8 @@ import com.code4.voltz.dominio.Endereco;
 import com.code4.voltz.dominio.Usuario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
@@ -18,10 +20,12 @@ public class EletrodomesticoCadastroEAtualizacaoForm {
 	@NotBlank(message = "Campo modelo não pode ser branco ou nulo.")
 	@JsonProperty
 	private String modelo;
-	@NotBlank(message = "Campo potência não pode ser branco ou nulo.")
+	@NotNull(message = "Campo potência não pode ser nulo.")
+	@Min(value = 0, message = "Campo potência deve maior que zero.")
+	@Max(value = 99999, message = "Campo potência não deve ser maior que 99.999.")
 	@JsonProperty
-	private String potencia;
-	@NotNull(message = "Campo ID do endereço não pode ser branco ou nulo.")
+	private int potencia;
+	@NotNull(message = "Campo ID do endereço não pode ser nulo.")
 	@JsonProperty
 	private Endereco endereco;
 
