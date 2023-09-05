@@ -58,7 +58,7 @@ ___
 
 ## ⚙ Funcionalidades do Sistema
 
-*  ### Cadastro de Usuários
+*  ### Cadastro de Usuário
 
 <p align="justify">
    O microserviço de Usuário permite o cadastro, consulta, atualização e exclusão de informações
