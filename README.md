@@ -61,9 +61,20 @@ ___
 *  ### Cadastro de Pessoa
 
 <p align="justify">
+   O microserviço de Usuário permite o cadastro, consulta, atualização e exclusão de informações
+   relacionadas aos usuários. Ao usuário foi atribuído o atributo nome. Cadastrado através do method POST na URL:
+</p>
+
+```
+localhost:8080/usuarios
+```
+
+*  ### Cadastro de Pessoa
+
+<p align="justify">
    O microserviço de Pessoa permite o cadastro, consulta, atualização e exclusão de informações
    relacionadas às pessoas. As informações básicas da pessoa incluem nome, data de
-   nascimento, sexo e grau de parentesco, cadastrados através do method POST na URL:
+   nascimento, sexo, grau de parentesco e endereço associado, cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -74,8 +85,8 @@ localhost:8080/pessoas
 
 <p align="justify">
    O microserviço de eletrodoméstico é responsável pelo gerenciamento das informações
-   relacionadas aos eletrodomésticos. Cada eletrodoméstico possui um nome, modelo e potência,
-   cadastrados através do method POST na URL:
+   relacionadas aos eletrodomésticos. Cada eletrodoméstico possui um nome, modelo, potência
+   e endereço associado, cadastrados através do method POST na URL:
 </p>
 
 ```
@@ -86,18 +97,33 @@ localhost:8080/eletrodomesticos
 
 <p align="justify">
    O microserviço de endereço permite o cadastro e gerenciamento das informações de
-   endereços. Cada endereço possui campos como rua, número, bairro, cidade e estado,
-   cadastrados através do method POST na URL:
+   endereços. Cada endereço possui campos como rua, número, bairro, cidade e estado
+   e usuário associado, cadastrados através do method POST na URL:
 </p>
 
 ```
 localhost:8080/enderecos
 ```
 
+* ### Cadastro de Consumo
+
+<p align="justify">
+   O microserviço de Consumo permite o cadastro e gerenciamento das informações de
+   consumo dos eletrodomésticos. Cada consumo possui datas início e fim de apuração,
+   tempo de utilização e eletrodoméstico associado. O sistema calcula o valor do consumo em Kwh. 
+   Consumos são cadastrados através do method POST na URL:
+</p>
+
+```
+localhost:8080/consumos
+```
+
 <p align="justify">
    Além disso, o sistema atribui automaticamente uma data de entrada para cada cadastro
    e valida os campos para que não haja inserção de dados inválidos, tal
-   como brancos ou nulos, em todos os serviços.
+   como brancos ou nulos, em todos os serviços. Também são validadas constraints de 
+   relacionamentos para impedir cadastramentos, exclusões, atualizações que não estão de acordo
+   com as foreign keys dos relacionamentos mapeados.
 <p>
 
 ___
@@ -108,7 +134,7 @@ ___
 A Request abaixo responsável pelo cadastro de pessoa, tem como obrigatoriedade o preenchimento dos campos a serem preenchidos.
 </p>
 
-> Campos: “nome”, “dataNascimento”, “sexo”, “parentescoComUsuario”
+> Campos: “nome”, “dataNascimento”, “sexo”, “parentescoComUsuario”, "endereco"
 
 <p align="justify">
 
