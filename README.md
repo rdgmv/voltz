@@ -356,7 +356,7 @@ Nesta situação, independentemente se a alteração for para um ou mais campos,
 [comment]: # (Fim testes da segunda fase)
 ___
 
-## 💾Tabela do Banco de dados
+## 💾Modelo lógico de dados
 
 ![voltz database.jpeg](github%20imgs%2Fvoltz%20database.jpeg)
 
@@ -415,6 +415,13 @@ Para contornar a questão, optou-se por criar diferentes classes DTO conforme o 
 Por padrão, adotou-se uma classe DTO para os métodos POST e PUT e outra para GET e DELETE. Deste modo,
 garantiu-se a validação dos dados necessários a cada requisição, mantendo-se, para todas as requisições,
 a aplicação do SRP.
+
+**Utilização da JPA para criação de relacionamentos entre tabelas do Banco de Dados**
+
+Nesta segunda etapa foi um desafio significativo  usar JPA (Java Persistence API) para criar relacionamentos entre tabelas no banco de dados. O principal obstáculo que enfrentamos foi entender e implementar corretamente os relacionamentos de entidades, como um relacionamento muitos para um, muitos para muitos ou um para um, usando anotações JPA.
+
+Superar esse desafio envolveu aprofundar nossos conhecimentos em JPA, estudar exemplos práticos, e testar várias configurações até que os relacionamentos funcionassem conforme o esperado. No final, essa experiência nos proporcionou um entendimento valioso de JPA e seu uso em projetos de persistência de dados.
+
 </p>
 
 ___
